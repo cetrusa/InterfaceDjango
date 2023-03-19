@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 secret.json
+static/images/panel.gif
