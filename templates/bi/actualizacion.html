@@ -1,0 +1,96 @@
+{% extends 'black.html' %}
+{% load static %}
+
+{% block title %}
+Actuliazación
+{% endblock title %}
+
+{% block content %}
+{% include 'includes/database_select.html' %}
+<br>
+<br>
+  <div class="card" style="width: 25rem;">
+    <div class="card-header text-center">
+      <h2>Actualizar PowerBi</h2>
+    </div>
+    <div class="card-body">
+
+      <p>
+      <form action="{% url 'bi_app:actualizacion_bi' %}" method="post" id="myForm">
+        {% csrf_token %}
+        <span class="card text-center"><button id="submitBtn" type="submit" class="btn btn-primary">Actualizar</button></span>
+      </form>
+      </p>
+      <h6>Recuerda!!! máximo 3 actualizaciones en un día</h6>
+    </div>
+  </div>
+<!-- Este es el Modal -->
+<div class="modal" id="processingModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Actualizando...</h5>
+      </div>
+      <div class="modal-body">
+        Por favor, espere mientras se procesa su actualización...
+      <br>
+      <hr>
+      Ten en cuenta que una vez termine la actualización debes esperar 5 min. para que se refresquen los datos.
+      <br>
+      <hr>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- final del modal -->
+{% endblock content %}
+
+{% block script %}
+<script>
+  document.getElementById("processingModal").style.display = "none";
+  var csrf_token = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+  document.getElementById("submitBtn").addEventListener("click", function (event) {
+  event.preventDefault();
+  document.getElementById("processingModal").style.display = "flex";
+
+  // Realiza la solicitud AJAX al servidor
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = "text";
+  xhr.open("POST", "{% url 'bi_app:actualizacion_bi' %}", true);
+  xhr.setRequestHeader("X-CSRFToken", csrf_token);
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  xhr.onreadystatechange = function () {
+    if (this.readyState === XMLHttpRequest.DONE) {
+      document.getElementById("processingModal").style.display = "none";
+      console.log(this.status, this.responseText);
+      var response = JSON.parse(this.responseText);
+      handleServerResponse(this.status, response);
+    }
+  };
+  var database = window.sessionStorage.getItem("database_name")
+  xhr.send("database_select=" + encodeURIComponent(database));
+});
+
+function handleServerResponse(status, response) {
+  if (status === 200) {
+    try {
+      if (typeof response === "object" && "success" in response && "error_message" in response) {
+        if (response.success) {
+          alert("Actualización terminada");
+        } else {
+          alert("Hubo un error en la actualización: " + response.error_message);
+        }
+      } else {
+        throw new Error("La respuesta del servidor no es un objeto JSON válido");
+      }
+    } catch (e) {
+      alert("Hubo un error en la actualización, por favor inténtelo de nuevo.");
+      console.error(e);
+    }
+  } else {
+    alert("Hubo un error en el proceso, por favor inténtelo de nuevo.");
+  }
+}
+
+</script>
+{% endblock script %}

@@ -1,0 +1,21 @@
+{% load static %}
+<div class="sidebar">
+  <center>
+    <span class="card" style="height: 100px; width: 100%;background: #4C6AB5;">
+      <img src="{% static 'images/Logo-Sidis-Blanco.png' %}" style="display: block;margin:auto ;width: 50%;"
+        alt="Logo-Sidis" />
+    </span>
+    <h4>{{ user.get_full_name }}</h4>
+  </center>
+  <nav>
+    <a href="{% url 'home_app:cubo'%}"><i class="fas fa-cube"></i><span>Cubo de Ventas</span></a>
+    <a href="{% url 'home_app:interface'%}"><i class="fas fa-desktop"></i><span>Int. Contables</span></a>
+    <a href="{% url 'home_app:plano'%}"><i class="fas fa-table"></i><span>Archivos Planos</span></a>
+
+    <a href="{% url 'bi_app:reporte_bi' %}"><i class="fas fa-tv"></i><span>Reportes Bi</span></a>
+    <a href="{% url 'home_app:actualizacion'%}"><i class="fas fa-th"></i><span>Actualización Datos</span></a>
+    <a href="{% url 'bi_app:actualizacion_bi' %}"><i class="fas fa-tv"></i><span>Actualización PowerBi</span></a>
+    <a href="#"><i class="fas fa-sliders-h"></i><span>Configuración</span></a>
+  </nav>
+</div>
+

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+
+<style>
+</style>
+{% endblock style %}
+{% block title %}
+{% endblock title %}
+{% block body %}
+<input type="checkbox" name="" id="check" />
+{% include 'includes/left_sidebar.html' %}
+{% include 'includes/top_nav.html' %}
+<div class="content">
+    <div class="wraper">
+        <div class="contenedorppal">
+            <div class="page-header pt-3">
+                <div class="col py-3">
+                    <div class="container-fluid h-100 d-flex flex-column">
+                        <div class="row flex-grow-1">
+                            <div class="col">
+                                {% block content %}
+                                {% endblock content %}
+                                <!-- </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% block script %}
+
+{% endblock script %}
+
+{% endblock body %}

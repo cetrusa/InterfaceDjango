@@ -1,0 +1,23 @@
+<header>
+    <label for="check">
+        <i class="fas fa-bars" id="hamburguer"></i>
+    </label>
+
+    <div class="left-area">
+        <h3>Interface <span>Amovil</span></h3>
+    </div>
+    <form class="right" action="{% url 'bi_app:actualizacion_bi' %}" method="post" id="myForm">
+        {% csrf_token %}
+        <div class="form-group">
+            <select name="database_select" required class="text-control text-uppercase" id="database_select">
+                <option disabled selected>Seleccione una empresa</option>
+            </select></li>
+        </div>
+    </form>
+    <div class="right-area">
+        {% if user.is_authenticated %}
+        <a href="{% url 'users_app:user-logout' %}" class="logout-btn">Logout <i class="fas fa-sign-out-alt"></i></a>
+        {% endif %}
+    </div>
+
+</header>

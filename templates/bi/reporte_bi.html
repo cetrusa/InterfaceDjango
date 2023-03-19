@@ -1,0 +1,88 @@
+{% extends 'black.html' %}
+{% load static %}
+<style>
+  .embed-responsive-item::after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px; /* Ajusta este valor según el tamaño de la barra inferior */
+    background: white;
+    z-index: 999;
+}
+
+  .glyphicon .pbi-glyph-share .glyph-small .socialIcon::after{
+    display: none;
+}
+.embed-responsive-item {
+    position: relative;
+}
+
+.logoBar[_ngcontent-kwn-c408] .logo[_ngcontent-kwn-c408] .socialSharing[_ngcontent-kwn-c408] {
+  display: none; /* Anula la propiedad 'float: right' */
+  /* Agrega otros estilos necesarios para el elemento */
+}
+</style>
+
+{% block title %}
+Reporte de Bi
+{% endblock title %}
+
+{% block content %}
+{% include 'includes/database_select.html' %}
+<div class="container">
+  <div class="row">
+      <div class="col-12">
+          <div class="embed-responsive embed-responsive-21by9">
+              <iframe class="embed-responsive-item" src="{{url_powerbi}}?embed=true&chromeless=true" title="{{StaticPage.nmEmpresa}}" allowfullscreen="true" id="powerbi-iframe"></iframe>
+          </div>
+      </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+    function fetchData() {
+      // Realiza la solicitud AJAX al servidor
+      var csrf_token = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = "text";
+      xhr.open("POST", "{% url 'bi_app:reporte_bi' %}", true);
+      xhr.setRequestHeader("X-CSRFToken", csrf_token);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function () {
+        if (this.readyState === XMLHttpRequest.DONE) {
+          handleServerResponse(this.status, this.responseText);
+        }
+      };
+      var database = window.sessionStorage.getItem("database_name");
+      xhr.send("database_select=" + encodeURIComponent(database));
+    }
+  
+    // Verifica si la página se carga con un valor de base de datos almacenado en sessionStorage
+    if (window.sessionStorage.getItem("database_name")) {
+      fetchData();
+    }
+  
+    function handleServerResponse(status, responseText) {
+      if (status === 200) {
+        // Parsea la respuesta JSON
+        var jsonResponse = JSON.parse(responseText);
+    
+        // Obtiene la URL de la clave 'url_powerbi'
+        var powerbiUrl = jsonResponse.url_powerbi;
+        console.log(this.status, powerbiUrl);
+    
+        // Obtiene el elemento iframe
+        var powerbi_iframe = document.getElementById("powerbi-iframe");
+    
+        // Establece la URL recibida como el atributo src del iframe
+        powerbi_iframe.src = powerbiUrl;
+      } else {
+        console.error("Error en la solicitud:", responseText);
+      }
+    }
+  </script>
+{% endblock script %}
