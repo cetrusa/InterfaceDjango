@@ -57,21 +57,3 @@ sys.path.append(BASE_DIR.child('scripts'))
 sys.path.append(BASE_DIR.child('scritps','extrae_bi'))
 
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/var/www/InterfaceDjango/debug.log',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}
