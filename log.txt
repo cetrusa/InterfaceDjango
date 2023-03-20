@@ -1,13 +1,18 @@
-<<<<<<< HEAD
-2023-03-20 07:48:31,721 Inciando Proceso
-2023-03-20 07:48:31,904 Inciando Proceso
-2023-03-20 07:48:31,905 Inciando Proceso
-2023-03-20 07:48:31,906 Inciando Proceso
-2023-03-20 07:48:31,925 Inciando Proceso
-=======
-2023-03-20 02:56:41,691 Inciando Proceso
-2023-03-20 02:56:41,838 Inciando Proceso
-2023-03-20 02:56:41,838 Inciando Proceso
-2023-03-20 02:56:41,839 Inciando Proceso
-2023-03-20 02:56:41,854 Inciando Proceso
->>>>>>> 87df82499f38ff21aa2c6081b1b50ce2f376c887
+2023-03-20 17:50:40,859 Inciando Proceso
+2023-03-20 17:50:40,887 Inciando Proceso
+2023-03-20 17:50:40,887 Inciando Proceso
+2023-03-20 17:50:40,887 Inciando Proceso
+2023-03-20 17:50:40,899 Inciando Proceso
+2023-03-20 17:50:40,918 Bad Request: /
+2023-03-20 17:50:40,998 Invalid HTTP_HOST header: '181.49.241.226:4084'. You may need to add '181.49.241.226' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/var/www/appsdjango/venvinterface/lib/python3.10/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/var/www/appsdjango/venvinterface/lib/python3.10/site-packages/django/utils/deprecation.py", line 135, in __call__
+    response = self.process_request(request)
+  File "/var/www/appsdjango/venvinterface/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/var/www/appsdjango/venvinterface/lib/python3.10/site-packages/django/http/request.py", line 152, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '181.49.241.226:4084'. You may need to add '181.49.241.226' to ALLOWED_HOSTS.
+2023-03-20 17:50:41,023 Bad Request: /favicon.ico
