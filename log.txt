@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 2023-03-20 07:48:31,721 Inciando Proceso
 2023-03-20 07:48:31,904 Inciando Proceso
 2023-03-20 07:48:31,905 Inciando Proceso
 2023-03-20 07:48:31,906 Inciando Proceso
 2023-03-20 07:48:31,925 Inciando Proceso
+=======
+2023-03-20 02:56:41,691 Inciando Proceso
+2023-03-20 02:56:41,838 Inciando Proceso
+2023-03-20 02:56:41,838 Inciando Proceso
+2023-03-20 02:56:41,839 Inciando Proceso
+2023-03-20 02:56:41,854 Inciando Proceso
+>>>>>>> 87df82499f38ff21aa2c6081b1b50ce2f376c887
