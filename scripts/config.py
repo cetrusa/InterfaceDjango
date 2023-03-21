@@ -35,7 +35,7 @@ class ConfigBasic():
             logging.info(StaticPage.nmCarpeta)
             logging.info(StaticPage.nmDt)
 
-            StaticPage.con = con.ConexionMariadb3(get_secret("DB_USERNAME"),get_secret("DB_PASS"),get_secret("DB_HOST"),get_secret("DB_PORT"),get_secret("DB_NAME"))
+            StaticPage.con = con.ConexionMariadb3(get_secret("DB_USERNAME"),get_secret("DB_PASS"),get_secret("DB_HOST"),int(get_secret("DB_PORT")),get_secret("DB_NAME"))
             
             with StaticPage.con.connect() as StaticPage.cursor:
                 sql = text(f"SELECT * FROM powerbi_adm.conf_empresas WHERE nmCarpeta = '{StaticPage.nmCarpeta}';")
@@ -99,25 +99,25 @@ class ConfigBasic():
                     df4 = pd.DataFrame(result)
                     StaticPage.IdtReporteFin=df4['IdtReporteFin'].values[0]
                 # Prepraramos datos de conexión
-                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_server WHERE nbServer = {StaticPage.nbServerSidis};"))
+                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_server WHERE nbServer = '{StaticPage.nbServerSidis}';"))
                 df5 = pd.DataFrame(result)
                 StaticPage.hostServerOut=str(df5['hostServer'].values[0])
                 StaticPage.portServerOut=int(df5['portServer'].values[0])
                 StaticPage.nbTipo=df5['nbTipo'].values[0]
-                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = {StaticPage.nbTipo};"))
+                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = '{StaticPage.nbTipo}';"))
                 df6 = pd.DataFrame(result)
                 StaticPage.nmUsrOut=str(df6['nmUsr'].values[0])
                 StaticPage.txPassOut=str(df6['txPass'].values[0])
-                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_server WHERE nbServer = {StaticPage.nbServerBi} ;"))
+                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_server WHERE nbServer = '{StaticPage.nbServerBi}' ;"))
                 df7 = pd.DataFrame(result)
                 StaticPage.hostServerIn=str(df7['hostServer'].values[0])
                 StaticPage.portServerIn=int(df7['portServer'].values[0])
                 StaticPage.nbTipoBi=df7['nbTipo'].values[0]
-                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = {StaticPage.nbTipoBi}"))
+                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = '{StaticPage.nbTipoBi}'"))
                 df8 = pd.DataFrame(result)
                 StaticPage.nmUsrIn=str(df8['nmUsr'].values[0])
                 StaticPage.txPassIn=str(df8['txPass'].values[0])
-                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = 3;"))
+                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = '3';"))
                 df9 = pd.DataFrame(result)
                 StaticPage.nmUsrPowerbi=str(df9['nmUsr'].values[0])
                 StaticPage.txPassPowerbi=str(df9['txPass'].values[0])
