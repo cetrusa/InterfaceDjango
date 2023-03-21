@@ -4,7 +4,6 @@ import json
 from django.core.exceptions import ImproperlyConfigured
 import pandas as pd
 import ast
-import mariadb
 from sqlalchemy.sql import text
 
 ####################################################################

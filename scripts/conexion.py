@@ -4,31 +4,31 @@ import sqlalchemy
 import pymysql
 
 class Conexion:
-    def ConexionMariadb(user,password,host,port,database):
-        # Conectar con la Plataforma Mariadb
-        try:
-            conexionmb = mariadb.connect(
-                user=user,
-                password=password,
-                host=host,
-                port=port,
-                database=database,
-            )
-        except Exception as e:
-            print(f"Error al conectar con la Plataforma Mariadb: {e}")
-            sys.exit(1)
-        return conexionmb
+    # def ConexionMariadb(user,password,host,port,database):
+    #     # Conectar con la Plataforma Mariadb
+    #     try:
+    #         conexionmb = mariadb.connect(
+    #             user=user,
+    #             password=password,
+    #             host=host,
+    #             port=port,
+    #             database=database,
+    #         )
+    #     except Exception as e:
+    #         print(f"Error al conectar con la Plataforma Mariadb: {e}")
+    #         sys.exit(1)
+    #     return conexionmb
 
 
-    def ConexionMariadb2(user,password,host,port,database):
-        # Conectar con la Plataforma Mariadb
-        try:
-            str_con=f"mariadb+pymysql://{user}:{password}@{host}:{port}/{database}"
-            engine = sqlalchemy.create_engine(str_con,echo=False,pool_pre_ping=True)
-        except Exception as e:
-            print(f"Error al conectar con la Plataforma Mariadb: {e}")
-            sys.exit(1)
-        return engine
+    # def ConexionMariadb2(user,password,host,port,database):
+    #     # Conectar con la Plataforma Mariadb
+    #     try:
+    #         str_con=f"mariadb+pymysql://{user}:{password}@{host}:{port}/{database}"
+    #         engine = sqlalchemy.create_engine(str_con,echo=False,pool_pre_ping=True)
+    #     except Exception as e:
+    #         print(f"Error al conectar con la Plataforma Mariadb: {e}")
+    #         sys.exit(1)
+    #     return engine
 
     def ConexionMariadb3(user,password,host,port,database):
         # Conectar con la Plataforma Mariadb
