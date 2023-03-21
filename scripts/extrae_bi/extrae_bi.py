@@ -36,7 +36,7 @@ class Extrae_Bi():
                 try:
                     self.procedimiento_a_sql(IdtReporteIni=StaticPage.IdtReporteIni,IdtReporteFin=StaticPage.IdtReporteFin,nmReporte=StaticPage.nmReporte,nmProcedure_in=StaticPage.nmProcedure_in,nmProcedure_out=StaticPage.nmProcedure_out,txTabla=StaticPage.txTabla)
                     logging.info(f'La información se generó con éxito de {StaticPage.nmReporte}')
-                except mariadb.Error as e:
+                except Exception as e:
                     logging.info(f'No fue posible extraer la información de {StaticPage.nmReporte} por {e}')
 
       
@@ -70,7 +70,7 @@ class Extrae_Bi():
                 logging.info(f"Se ha realizado el proceso de {txTabla}")
                 logging.info(f"Se han insertado los datos {txTabla}, entre {IdtReporteIni} y {IdtReporteFin}")
                 EsVacio=True 
-            except mariadb.Error as e:
+            except Exception as e:
                 logging.error(e)    
         else:
             StaticPage.resultado_out=self.consulta_sql_out(nmProcedure_out=nmProcedure_out,IdtReporteIni=IdtReporteIni,IdtReporteFin=IdtReporteFin,nmReporte=nmReporte)

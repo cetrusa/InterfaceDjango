@@ -3,7 +3,6 @@ import pandas as pd
 from os import path, system
 from time import time
 from distutils.log import error
-import mariadb
 from sqlalchemy.sql import text
 import sqlalchemy
 import pymysql

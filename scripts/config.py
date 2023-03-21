@@ -127,5 +127,5 @@ class ConfigBasic():
                 StaticPage.conout = con.ConexionMariadb3(user=StaticPage.nmUsrOut,password=StaticPage.txPassOut,host=StaticPage.hostServerOut,port=StaticPage.portServerOut,database=StaticPage.dbSidis)
                 StaticPage.conin3 = con.ConexionMariadb3(user=StaticPage.nmUsrIn,password=StaticPage.txPassIn,host=StaticPage.hostServerIn,port=StaticPage.portServerIn,database=StaticPage.dbBi)
             
-    except mariadb.Error as e:
+    except Exception as e:
         print(logging.error(e))

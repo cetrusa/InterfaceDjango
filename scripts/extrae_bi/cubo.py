@@ -49,6 +49,6 @@ class Cubo_Ventas:
                         resultado = pd.read_sql_query(sql=sqlout, con=cursor)
                         resultado.to_excel(writer, index=False, sheet_name=hoja, header=True)
                         writer.sheets[hoja].sheet_state = 'visible'
-                except mariadb.Error as e:
+                except Exception as e:
                     print(logging.info(f'No fue posible generar la información por {e}'))
                 
