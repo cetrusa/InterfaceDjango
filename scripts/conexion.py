@@ -14,7 +14,7 @@ class Conexion:
                 port=port,
                 database=database,
             )
-        except mariadb.Error as e:
+        except Exception as e:
             print(f"Error al conectar con la Plataforma Mariadb: {e}")
             sys.exit(1)
         return conexionmb
@@ -25,7 +25,7 @@ class Conexion:
         try:
             str_con=f"mariadb+pymysql://{user}:{password}@{host}:{port}/{database}"
             engine = sqlalchemy.create_engine(str_con,echo=False,pool_pre_ping=True)
-        except mariadb.Error as e:
+        except Exception as e:
             print(f"Error al conectar con la Plataforma Mariadb: {e}")
             sys.exit(1)
         return engine
@@ -67,7 +67,7 @@ class Conexion:
             pool_recycle=3600,  # 1 hora
             )
             
-        except mariadb.Error as e:
+        except Exception as e:
             print(f"Error al conectar con la Plataforma Mariadb: {e}")
             sys.exit(1)
         return pool
