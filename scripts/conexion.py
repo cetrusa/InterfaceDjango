@@ -4,7 +4,7 @@ import sqlalchemy
 import pymysql
 
 class Conexion:
-    def ConexionMariadb(user='display',password='Bi2023*+',host='181.49.241.226',port=55136,database="powerbi_adm"):
+    def ConexionMariadb(user,password,host,port,database):
         # Conectar con la Plataforma Mariadb
         try:
             conexionmb = mariadb.connect(
@@ -20,7 +20,7 @@ class Conexion:
         return conexionmb
 
 
-    def ConexionMariadb2(user='display',password='Bi2023*+',host='181.49.241.226',port=55136,database="powerbi_adm"):
+    def ConexionMariadb2(user,password,host,port,database):
         # Conectar con la Plataforma Mariadb
         try:
             str_con=f"mariadb+pymysql://{user}:{password}@{host}:{port}/{database}"
@@ -30,7 +30,7 @@ class Conexion:
             sys.exit(1)
         return engine
 
-    def ConexionMariadb3(user='display',password='Bi2023*+',host='181.49.241.226',port=55136,database="powerbi_adm"):
+    def ConexionMariadb3(user,password,host,port,database):
         # Conectar con la Plataforma Mariadb
         try:
             connect_args = {}
@@ -72,7 +72,7 @@ class Conexion:
             sys.exit(1)
         return pool
 
-    def ConexionMysql(user='display',password='Bi2023*+',host='181.49.241.226',port=55136,database="powerbi_adm"):
+    def ConexionMysql(user,password,host,port,database):
         # Conectar con la Plataforma Mariadb
         str_con=f"mysql+mysqlconnector://{user}:{password}@{host}:{port}/{database}"
         engine = sqlalchemy.create_engine(str_con,echo=False)

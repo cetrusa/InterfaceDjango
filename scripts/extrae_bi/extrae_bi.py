@@ -26,8 +26,7 @@ class Extrae_Bi():
             with StaticPage.conin.connect() as connectionin:
                 sql = text(f"SELECT * FROM powerbi_adm.conf_sql WHERE nbSql = {a}")
                 result = connectionin.execute(sql)
-                resultado9 = result.fetchall()
-                df9 = pd.DataFrame(resultado9)
+                df9 = pd.DataFrame(result)
                 StaticPage.txTabla = str(df9['txTabla'].values[0])
                 StaticPage.nmReporte = str(df9['nmReporte'].values[0])
                 StaticPage.nmProcedure_out = str(df9['nmProcedure_out'].values[0])
