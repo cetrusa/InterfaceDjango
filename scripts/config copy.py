@@ -37,11 +37,11 @@ class ConfigBasic():
 
             StaticPage.con = con.ConexionMariadb3(get_secret("DB_USERNAME"),get_secret("DB_PASS"),get_secret("DB_HOST"),int(get_secret("DB_PORT")),get_secret("DB_NAME"))
             
-            with StaticPage.con.connect() as connectionout:
-                StaticPage.cursor = connectionout.execution_options(isolation_level="READ COMMITTED")
+            with StaticPage.con.connect() as StaticPage.cursor:
                 sql = text(f"SELECT * FROM powerbi_adm.conf_empresas WHERE nmCarpeta = '{StaticPage.nmCarpeta}';")
-                result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
-                df = pd.DataFrame(result)
+                result = StaticPage.cursor.execute(sql)
+                resultado = result
+                df = pd.DataFrame(resultado)
                 StaticPage.nbEmpresa= df['nbEmpresa'].values[0]
                 #logging.info(nbEmpresa)
                 StaticPage.nmEmpresa=df['nmEmpresa'].values[0]
@@ -73,62 +73,51 @@ class ConfigBasic():
                 
                 # Iniciamos a definir las fechas
                 sql = text(f"SELECT COUNT(*) FROM powerbi_adm.conf_dt WHERE nmDt = '{StaticPage.nmDt}';")
-                result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                result = StaticPage.cursor.execute(sql)
                 cdf = pd.DataFrame(result)
                 count=cdf['COUNT(*)'].values[0]
                 if count == [1]:
-                    sql = text(f"SELECT * FROM powerbi_adm.conf_dt WHERE nmDt = '{StaticPage.nmDt}';")
-                    result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                    result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_dt WHERE nmDt = '{StaticPage.nmDt}';"))
                     df2 = pd.DataFrame(result)
                     StaticPage.txDtIni=str( df2['txDtIni'].values[0])
                     StaticPage.txDtFin=str( df2['txDtFin'].values[0])
-                    sql = text(StaticPage.txDtIni)
-                    result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                    result = StaticPage.cursor.execute(text(StaticPage.txDtIni))
                     df3 = pd.DataFrame(result)
                     StaticPage.IdtReporteIni=df3['IdtReporteIni'].values[0]
-                    sql = text(StaticPage.txDtFin)
-                    result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                    result = StaticPage.cursor.execute(text(StaticPage.txDtFin))
                     df4 = pd.DataFrame(result)
                     StaticPage.IdtReporteFin=df4['IdtReporteFin'].values[0]
                 else:
-                    sql = text("SELECT * FROM powerbi_adm.conf_dt WHERE nmDt = 'puente1dia';")
-                    result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                    result = StaticPage.cursor.execute(text("SELECT * FROM powerbi_adm.conf_dt WHERE nmDt = 'puente1dia';"))
                     df2 = pd.DataFrame(result)
                     StaticPage.txDtIni=str( df2['txDtIni'].values[0])
-                    StaticPage.txDtFin=str( df2['txDtFin'].values[0])
-                    sql = text(StaticPage.txDtIni)
-                    result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                    StaticPage.txDtFin=str( df2['thttp://127.0.0.1:8000/xDtFin'].values[0])
+                    result = StaticPage.cursor.execute(text(StaticPage.txDtIni))
                     df3 = pd.DataFrame(result)
                     StaticPage.IdtReporteIni=df3['IdtReporteIni'].values[0]
-                    sql = text(StaticPage.txDtFin)
-                    result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                    result = StaticPage.cursor.execute(text(StaticPage.txDtFin))
                     df4 = pd.DataFrame(result)
                     StaticPage.IdtReporteFin=df4['IdtReporteFin'].values[0]
                 # Prepraramos datos de conexión
-                sql = text(f"SELECT * FROM powerbi_adm.conf_server WHERE nbServer = '{StaticPage.nbServerSidis}';")
-                result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_server WHERE nbServer = '{StaticPage.nbServerSidis}';"))
                 df5 = pd.DataFrame(result)
                 StaticPage.hostServerOut=str(df5['hostServer'].values[0])
                 StaticPage.portServerOut=int(df5['portServer'].values[0])
                 StaticPage.nbTipo=df5['nbTipo'].values[0]
-                sql = text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = '{StaticPage.nbTipo}';")
-                result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = '{StaticPage.nbTipo}';"))
                 df6 = pd.DataFrame(result)
                 StaticPage.nmUsrOut=str(df6['nmUsr'].values[0])
                 StaticPage.txPassOut=str(df6['txPass'].values[0])
-                sql = text(f"SELECT * FROM powerbi_adm.conf_server WHERE nbServer = '{StaticPage.nbServerBi}' ;")
-                result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_server WHERE nbServer = '{StaticPage.nbServerBi}' ;"))
                 df7 = pd.DataFrame(result)
                 StaticPage.hostServerIn=str(df7['hostServer'].values[0])
                 StaticPage.portServerIn=int(df7['portServer'].values[0])
                 StaticPage.nbTipoBi=df7['nbTipo'].values[0]
-                sql = text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = '{StaticPage.nbTipoBi}'")
-                result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = '{StaticPage.nbTipoBi}'"))
                 df8 = pd.DataFrame(result)
                 StaticPage.nmUsrIn=str(df8['nmUsr'].values[0])
                 StaticPage.txPassIn=str(df8['txPass'].values[0])
-                sql = text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = '3';")
-                result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
+                result = StaticPage.cursor.execute(text(f"SELECT * FROM powerbi_adm.conf_tipo WHERE nbTipo = '3';"))
                 df9 = pd.DataFrame(result)
                 StaticPage.nmUsrPowerbi=str(df9['nmUsr'].values[0])
                 StaticPage.txPassPowerbi=str(df9['txPass'].values[0])
