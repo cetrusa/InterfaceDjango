@@ -5,7 +5,6 @@ import pandas as pd
 from os import path, system
 from distutils.log import error
 import ast
-import mariadb
 from sqlalchemy.sql import text
 import sqlalchemy
 import pymysql
