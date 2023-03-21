@@ -44,6 +44,7 @@ class ConfigBasic():
                 df = pd.DataFrame(resultado)
                 StaticPage.nbEmpresa= df['nbEmpresa'].values[0]
                 #logging.info(nbEmpresa)
+                print("aqui toy")
                 StaticPage.nmEmpresa=df['nmEmpresa'].values[0]
                 logging.info(StaticPage.nmEmpresa)
                 StaticPage.nmCarpeta=df['nmCarpeta'].values[0]
