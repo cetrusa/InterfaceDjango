@@ -131,3 +131,4 @@ dmypy.json
 secret.json
 static/images/panel.gif
 log.txt
+staticfiles/
