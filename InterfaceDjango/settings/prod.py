@@ -44,6 +44,7 @@ STATICFILES_DIRS = [BASE_DIR.child('static')]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR.child('media')
+STATIC_ROOT = BASE_DIR.child('staticfiles')
 
 # EMAIL SETTINGS
 EMAIL_USE_TLS = True
