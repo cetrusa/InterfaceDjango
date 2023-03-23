@@ -132,3 +132,6 @@ secret.json
 static/images/panel.gif
 log.txt
 staticfiles/
+Dockerfile
+docker-compose.yml
+__pycache__/

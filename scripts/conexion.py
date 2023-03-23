@@ -1,4 +1,4 @@
-import mariadb
+# import mariadb
 import sys
 import sqlalchemy
 import pymysql
