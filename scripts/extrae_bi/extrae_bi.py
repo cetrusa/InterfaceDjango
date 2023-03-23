@@ -1,6 +1,6 @@
 import pandas as pd
 from distutils.log import error
-import mariadb
+# import mariadb
 from sqlalchemy.sql import text
 from scripts.config import ConfigBasic
 from scripts.StaticPage import StaticPage
