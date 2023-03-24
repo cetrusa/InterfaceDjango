@@ -48,6 +48,7 @@ LOCAL_APPS = (
     'scripts',
     'scripts.extrae_bi',
     'applications.bi',
+    'applications.permisos',
 )
 
 THIRD_PARTY_APPS = ()

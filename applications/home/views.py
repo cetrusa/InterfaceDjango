@@ -9,7 +9,7 @@ import io
 from django.views.generic import View
 import requests
 from django.utils.decorators import method_decorator
-# from applications.users.decorators import registrar_auditoria
+from applications.users.decorators import registrar_auditoria
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required, permission_required
@@ -66,14 +66,13 @@ class DeleteFileView(View):
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
 
 
-class CuboPage(UserPassesTestMixin,LoginRequiredMixin, TemplateView):
+class CuboPage(LoginRequiredMixin, TemplateView):
     template_name = "home/cubo.html"
     login_url = reverse_lazy('users_app:user-login')
 
-    
-    @method_decorator(login_required(login_url=reverse_lazy('users_app:user-login')))
-    # @method_decorator(registrar_auditoria())
-    @method_decorator(permission_required('applications.home.cubo', raise_exception=True))
+    # @method_decorator(login_required(login_url=reverse_lazy('users_app:user-login')))
+    @method_decorator(registrar_auditoria)
+    @method_decorator(permission_required('permisos.cubo', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             print(request.user.get_all_permissions())  # Imprime los permisos del usuario

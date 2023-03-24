@@ -1,6 +1,6 @@
 {% load static %}
 
-{% if perms.applications.home.nav_bar %}
+{% if perms.permisos.nav_bar %}
   
 
   
@@ -14,25 +14,25 @@
   </center>
   <nav>
     
-    {% if perms.applications.home.cubo %}
+    {% if perms.permisos.cubo %}
     <a href="{% url 'home_app:cubo'%}"><i class="fas fa-cube"></i><span>Cubo de Ventas</span></a>
     {% endif %}
-    {% if perms.applications.home.interface %}
+    {% if perms.permisos.interface %}
     <a href="{% url 'home_app:interface'%}"><i class="fas fa-desktop"></i><span>Int. Contables</span></a>
     {% endif %}
-    {% if perms.applications.home.plano %}
+    {% if perms.permisos.plano %}
     <a href="{% url 'home_app:plano'%}"><i class="fas fa-table"></i><span>Archivos Planos</span></a>
     {% endif %}
-    {% if perms.applications.home.reporte_bi %}
+    {% if perms.permisos.reporte_bi %}
     <a href="{% url 'bi_app:reporte_bi' %}"><i class="fas fa-tv"></i><span>Reportes Bi</span></a>
     {% endif %}
-    {% if perms.applications.home.actualizacion_base %}
+    {% if perms.permisos.actualizacion_base %}
     <a href="{% url 'home_app:actualizacion'%}"><i class="fas fa-th"></i><span>Actualización Datos</span></a>
     {% endif %}
-    {% if perms.applications.home.actualizacion_bi_home_permisos %}
+    {% if perms.permisos.actualizacion_bi %}
     <a href="{% url 'bi_app:actualizacion_bi' %}"><i class="fas fa-tv"></i><span>Actualización PowerBi</span></a>
     {% endif %}
-    {% if perms.applications.home.nuevo_home_permisos %}
+    {% if perms.permisos.nuevo %}
     <a href="#"><i class="fas fa-sliders-h"></i><span>Configuración</span></a>
     {% endif %}
 
