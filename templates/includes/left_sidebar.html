@@ -24,10 +24,10 @@
     <a href="{% url 'home_app:plano'%}"><i class="fas fa-table"></i><span>Archivos Planos</span></a>
     {% endif %}
     {% if perms.permisos.reporte_bi %}
-    <a href="{% url 'bi_app:reporte_bi' %}"><i class="fas fa-tv"></i><span>Reportes Bi</span></a>
+    <a href="{% url 'bi_app:informe_bi' %}"><i class="fas fa-tv"></i><span>Reportes Bi</span></a>
     {% endif %}
     {% if perms.permisos.actualizacion_base %}
-    <a href="{% url 'home_app:actualizacion'%}"><i class="fas fa-th"></i><span>Actualización Datos</span></a>
+    <a href="{% url 'home_app:actualizar_base'%}"><i class="fas fa-th"></i><span>Actualización Datos</span></a>
     {% endif %}
     {% if perms.permisos.actualizacion_bi %}
     <a href="{% url 'bi_app:actualizacion_bi' %}"><i class="fas fa-tv"></i><span>Actualización PowerBi</span></a>
