@@ -24,4 +24,9 @@ urlpatterns = [
         name='user-database',
     ),
     path('database/list/', views.database_list, name='database_list'),
+    path(
+        'register/', 
+        views.UserRegisterView.as_view(),
+        name='user-register',
+    ),
 ]

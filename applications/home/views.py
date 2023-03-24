@@ -8,6 +8,14 @@ from django.http import HttpResponse,FileResponse,JsonResponse
 import io
 from django.views.generic import View
 import requests
+from django.utils.decorators import method_decorator
+# from applications.users.decorators import registrar_auditoria
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required, permission_required
+
+
+
 
 
 from scripts.conexion import Conexion
@@ -16,6 +24,7 @@ from scripts.StaticPage import StaticPage
 from scripts.extrae_bi.extrae_bi import Extrae_Bi
 from scripts.extrae_bi.cubo import Cubo_Ventas
 from scripts.extrae_bi.interface import Interface_Contable
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 
 from django.views.generic import (
@@ -56,10 +65,23 @@ class DeleteFileView(View):
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
 
-class CuboPage(LoginRequiredMixin, TemplateView):
+
+class CuboPage(UserPassesTestMixin,LoginRequiredMixin, TemplateView):
     template_name = "home/cubo.html"
     login_url = reverse_lazy('users_app:user-login')
 
+    
+    @method_decorator(login_required(login_url=reverse_lazy('users_app:user-login')))
+    # @method_decorator(registrar_auditoria())
+    @method_decorator(permission_required('applications.home.cubo', raise_exception=True))
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            print(request.user.get_all_permissions())  # Imprime los permisos del usuario
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect('users_app:user-login')
+    
+    
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
         print(f"cubo este es del post {database_name}")

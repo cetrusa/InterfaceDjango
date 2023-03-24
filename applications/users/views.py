@@ -3,6 +3,9 @@ from django.core.mail import send_mail
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import permission_required
+from django.utils.decorators import method_decorator
+# from applications.users.decorators import registrar_auditoria
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 
@@ -35,7 +38,7 @@ class UserRegisterView(FormView):
 
     def form_valid(self, form):
         # generamos el codigo
-        codigo = code_generator()
+        # codigo = code_generator()
         #
         usuario = User.objects.create_user(
             form.cleaned_data['username'],
@@ -44,22 +47,22 @@ class UserRegisterView(FormView):
             nombres=form.cleaned_data['nombres'],
             apellidos=form.cleaned_data['apellidos'],
             genero=form.cleaned_data['genero'],
-            codregistro=codigo
+            # codregistro=codigo
         )
-        # enviar el codigo al email del user
-        asunto = 'Confirmación de email'
-        mensaje = 'Codigo de verificación: ' + codigo
-        email_remitente = 'torredecontrolamovil@gmail.com'
-        #
-        send_mail(asunto, mensaje, email_remitente, [form.cleaned_data['email'],])
-        # redirigir a pantalla de valdiacion
+        # # enviar el codigo al email del user
+        # asunto = 'Confirmación de email'
+        # mensaje = 'Codigo de verificación: ' + codigo
+        # email_remitente = 'torredecontrolamovil@gmail.com'
+        # #
+        # send_mail(asunto, mensaje, email_remitente, [form.cleaned_data['email'],])
+        # # redirigir a pantalla de valdiacion
 
-        return HttpResponseRedirect(
-            reverse(
-                'users_app:user-verification',
-                kwargs={'pk': usuario.id}
-            )
-        )
+        # return HttpResponseRedirect(
+        #     reverse(
+        #         'users_app:user-verification',
+        #         kwargs={'pk': usuario.id}
+        #     )
+        # )
 
 
 
@@ -142,3 +145,5 @@ def database_list(request):
     databases = request.user.databases.all()
     database_list = [database.name for database in databases]
     return JsonResponse({'database_list': database_list})
+
+

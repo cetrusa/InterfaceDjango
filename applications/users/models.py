@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import JSONField
+from django.conf import settings
 
 # Create your models here.
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
@@ -50,3 +52,17 @@ class User(AbstractBaseUser,PermissionsMixin):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     databases = models.ManyToManyField(Database)
+    
+class RegistroAuditoria(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    fecha_hora = models.DateTimeField(auto_now_add=True)
+    ip = models.GenericIPAddressField()
+    transaccion = models.CharField(max_length=255)
+    detalle = JSONField()
+    database_name = models.CharField(max_length=100, null=True, blank=True)
+    city = models.CharField(max_length=100,null=True,blank=True)
+
+
+    class Meta:
+        db_table = 'registro_auditoria'
+        

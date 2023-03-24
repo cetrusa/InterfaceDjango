@@ -1,4 +1,9 @@
 {% load static %}
+
+{% if perms.applications.home.nav_bar %}
+  
+
+  
 <div class="sidebar">
   <center>
     <span class="card" style="height: 100px; width: 100%;background: #4C6AB5;">
@@ -8,14 +13,38 @@
     <h4>{{ user.get_full_name }}</h4>
   </center>
   <nav>
+    
+    {% if perms.applications.home.cubo %}
     <a href="{% url 'home_app:cubo'%}"><i class="fas fa-cube"></i><span>Cubo de Ventas</span></a>
+    {% endif %}
+    {% if perms.applications.home.interface %}
     <a href="{% url 'home_app:interface'%}"><i class="fas fa-desktop"></i><span>Int. Contables</span></a>
+    {% endif %}
+    {% if perms.applications.home.plano %}
     <a href="{% url 'home_app:plano'%}"><i class="fas fa-table"></i><span>Archivos Planos</span></a>
-
+    {% endif %}
+    {% if perms.applications.home.reporte_bi %}
     <a href="{% url 'bi_app:reporte_bi' %}"><i class="fas fa-tv"></i><span>Reportes Bi</span></a>
+    {% endif %}
+    {% if perms.applications.home.actualizacion_base %}
     <a href="{% url 'home_app:actualizacion'%}"><i class="fas fa-th"></i><span>Actualización Datos</span></a>
+    {% endif %}
+    {% if perms.applications.home.actualizacion_bi_home_permisos %}
     <a href="{% url 'bi_app:actualizacion_bi' %}"><i class="fas fa-tv"></i><span>Actualización PowerBi</span></a>
+    {% endif %}
+    {% if perms.applications.home.nuevo_home_permisos %}
     <a href="#"><i class="fas fa-sliders-h"></i><span>Configuración</span></a>
+    {% endif %}
+
+      
+    
+    
+    
+
+    
+    
+    
+    
   </nav>
 </div>
-
+{% endif %}

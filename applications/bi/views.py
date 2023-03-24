@@ -1,5 +1,8 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import permission_required
+from django.utils.decorators import method_decorator
+# from applications.users.decorators import registrar_auditoria
 from django.urls import reverse_lazy, reverse
 import requests
 from django.http import HttpResponse,FileResponse,JsonResponse
