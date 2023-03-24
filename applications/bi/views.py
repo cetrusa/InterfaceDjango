@@ -17,6 +17,7 @@ from scripts.extrae_bi.extrae_bi import Extrae_Bi
 from scripts.extrae_bi.apipowerbi import Api_PowerBi
 from scripts.config import ConfigBasic
 from django.contrib.auth.decorators import login_required
+from applications.users.decorators import registrar_auditoria
 
 @login_required(login_url='/login/')
 def actualizar_database_name(request):
@@ -35,6 +36,15 @@ class EliminarReporteFetched(View):
 class ActualizacionBiPage(LoginRequiredMixin, TemplateView):
     template_name = "bi/actualizacion.html"
     login_url = reverse_lazy('users_app:user-login')
+    
+    @method_decorator(registrar_auditoria)
+    @method_decorator(permission_required('permisos.actualizacion_bi', raise_exception=True))
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            print(request.user.get_all_permissions())  # Imprime los permisos del usuario
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect('users_app:user-login')
             
     def post(self, request, *args, **kwargs):
         database_name = request.session.get('database_name') or request.POST.get('database_select')
@@ -54,6 +64,15 @@ class ActualizacionBiPage(LoginRequiredMixin, TemplateView):
 class EmbedReportPage(LoginRequiredMixin, TemplateView):
     template_name = "bi/reporte_bi.html"
     login_url = reverse_lazy('users_app:user-login')
+    
+    @method_decorator(registrar_auditoria)
+    @method_decorator(permission_required('permisos.informe_bi', raise_exception=True))
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            print(request.user.get_all_permissions())  # Imprime los permisos del usuario
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect('users_app:user-login')
 
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
