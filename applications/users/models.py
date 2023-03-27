@@ -63,7 +63,10 @@ class RegistroAuditoria(models.Model):
     database_name = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100,null=True,blank=True)
 
-
+    def __str__(self):
+        return self.fecha_hora.strftime('%Y-%m-%d %H:%M:%S')+ ' - '+ self.database_name + ' - ' + self.usuario.get_full_name() + ' - '  +self.city
     class Meta:
         db_table = 'registro_auditoria'
+        verbose_name = 'Registro de Auditoria'
+        verbose_name_plural = 'Registro de Auditorias'
         

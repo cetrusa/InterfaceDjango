@@ -16,48 +16,52 @@ class PermisosBarra(models.Model):
         )
         
 class ConfDt(models.Model):
-    nbDt = models.BigIntegerField(primary_key=True)
-    nmDt = models.CharField(max_length=100, null=True, blank=True)
-    txDtIni = models.TextField(null=True, blank=True)
-    txDtFin = models.TextField(null=True, blank=True)
+    nbDt = models.BigIntegerField(primary_key=True,verbose_name='Id')
+    nmDt = models.CharField(max_length=100, null=True, blank=True,verbose_name='Nombre Rango de Fecha')
+    txDtIni = models.TextField(null=True, blank=True, verbose_name='Fecha Inicial')
+    txDtFin = models.TextField(null=True, blank=True,verbose_name='Fecha Final')
 
     class Meta:
         db_table = 'conf_dt'
         # managed = False
+        verbose_name = 'Configuración Rango de Fecha'
+        verbose_name_plural = 'Configuración Rangos de Fechas'
 
 class ConfEmpresas(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    nmEmpresa = models.CharField(max_length=100, null=True, blank=True)
-    name = models.CharField(max_length=100, null=True, blank=True)
-    nbServerSidis = models.BigIntegerField(null=True, blank=True)
-    dbSidis = models.CharField(max_length=150, null=True, blank=True)
-    nbServerBi = models.BigIntegerField(null=True, blank=True)
-    dbBi = models.CharField(max_length=150, null=True, blank=True)
-    txProcedureExtrae = models.CharField(max_length=100, null=True, blank=True)
-    txProcedureCargue = models.TextField(null=True, blank=True)
-    nmProcedureInterface = models.CharField(max_length=30, null=True, blank=True)
-    txProcedureInterface = models.TextField(null=True, blank=True)
-    nmProcedureExcel = models.CharField(max_length=30, null=True, blank=True)
-    txProcedureExcel = models.TextField(null=True, blank=True)
-    nmProcedureExcel2 = models.CharField(max_length=30, null=True, blank=True)
-    txProcedureExcel2 = models.TextField(null=True, blank=True)
-    nmProcedureCsv = models.CharField(max_length=30, null=True, blank=True)
-    txProcedureCsv = models.TextField(null=True, blank=True)
-    nmProcedureCsv2 = models.CharField(max_length=30, null=True, blank=True)
-    txProcedureCsv2 = models.TextField(null=True, blank=True)
-    nmProcedureSql = models.CharField(max_length=30, null=True, blank=True)
-    txProcedureSql = models.TextField(null=True, blank=True)
-    report_id_powerbi = models.CharField(max_length=255, null=True, blank=True)
-    dataset_id_powerbi = models.CharField(max_length=255, null=True, blank=True)
-    url_powerbi = models.TextField(null=True, blank=True)
-    estado = models.IntegerField(null=True, blank=True)
+    id = models.BigIntegerField(primary_key=True,verbose_name='id')
+    nmEmpresa = models.CharField(max_length=100, null=True, blank=True, verbose_name='Nombre Empresa')
+    name = models.CharField(max_length=100, null=True, blank=True,verbose_name='Nombre de la Base')
+    nbServerSidis = models.BigIntegerField(null=True, blank=True,verbose_name='Id Servidor Sidis')
+    dbSidis = models.CharField(max_length=150, null=True, blank=True, verbose_name='Base de datos Sidis')
+    nbServerBi = models.BigIntegerField(null=True, blank=True,verbose_name='Id Servidor PowerBi')
+    dbBi = models.CharField(max_length=150, null=True, blank=True,verbose_name='Base de datos Bi')
+    txProcedureExtrae = models.CharField(max_length=100, null=True, blank=True,verbose_name='Procedimiento Extractor')
+    txProcedureCargue = models.TextField(null=True, blank=True,verbose_name='Proceso sql del Cargue')
+    nmProcedureInterface = models.CharField(max_length=30, null=True, blank=True,verbose_name='Procedimiento Interface')
+    txProcedureInterface = models.TextField(null=True, blank=True,verbose_name='Procesos sql de Interface')
+    nmProcedureExcel = models.CharField(max_length=30, null=True, blank=True,verbose_name='Procedimiento a Excel')
+    txProcedureExcel = models.TextField(null=True, blank=True,verbose_name='Procesos sql a Excel')
+    nmProcedureExcel2 = models.CharField(max_length=30, null=True, blank=True,verbose_name='Procedimiento a Excel2')
+    txProcedureExcel2 = models.TextField(null=True, blank=True,verbose_name='Procesos sql a Excel2')
+    nmProcedureCsv = models.CharField(max_length=30, null=True, blank=True,verbose_name='Procedimiento a Csv')
+    txProcedureCsv = models.TextField(null=True, blank=True,verbose_name='Procesos sql a Csv')
+    nmProcedureCsv2 = models.CharField(max_length=30, null=True, blank=True,verbose_name='Procedimiento a Csv2')
+    txProcedureCsv2 = models.TextField(null=True, blank=True,verbose_name='Procesos sql a Csv2')
+    nmProcedureSql = models.CharField(max_length=30, null=True, blank=True,verbose_name='Procedimiento a Sql')
+    txProcedureSql = models.TextField(null=True, blank=True,verbose_name='Procesos sql a Sql')
+    report_id_powerbi = models.CharField(max_length=255, null=True, blank=True,verbose_name='Id Reporte PowerBi')
+    dataset_id_powerbi = models.CharField(max_length=255, null=True, blank=True,verbose_name='Dataset PowerBi')
+    url_powerbi = models.TextField(null=True, blank=True,verbose_name='Url Pública PowerBi')
+    estado = models.IntegerField(null=True, blank=True,verbose_name='Activo')
 
     def __str__(self):
-        return self.name
+        return f'{self.id}-{self.name}-{self.nmEmpresa}'
     
     class Meta:
         db_table = 'conf_empresas'
         # managed = False
+        verbose_name = 'Configuración Empresa'
+        verbose_name_plural = 'Configuración Empresas'
         
     
 
@@ -67,10 +71,15 @@ class ConfServer(models.Model):
     hostServer = models.CharField(max_length=100, null=True, blank=True)
     portServer = models.CharField(max_length=10, null=True, blank=True)
     nbTipo = models.BigIntegerField(null=True, blank=True)
+    
+    def __str__(self):
+        return f'{self.nbServer}-{self.nmServer}'
 
     class Meta:
         db_table = 'conf_server'
         # managed = False
+        verbose_name = 'Configuración Servidor'
+        verbose_name_plural = 'Configuración Servidores'
         
         
 class ConfSql(models.Model):
@@ -81,10 +90,15 @@ class ConfSql(models.Model):
     txDescripcion = models.CharField(max_length=255, null=True, blank=True)
     nmProcedure_out = models.CharField(max_length=100, null=True, blank=True)
     nmProcedure_in = models.CharField(max_length=100, null=True, blank=True)
+    
+    def __str__(self):
+        return f'{self.nbSql}-{self.txDescripcion}-{self.nmReporte}'
 
     class Meta:
         db_table = 'conf_sql'
         # managed = False
+        verbose_name = 'Configuración Procedimiento Sql'
+        verbose_name_plural = 'Configuración Procedimientos Sql'
 
 class ConfTipo(models.Model):
     nbTipo = models.BigIntegerField(primary_key=True)
@@ -94,4 +108,8 @@ class ConfTipo(models.Model):
     class Meta:
         db_table = 'conf_tipo'
         # managed = False
+        verbose_name = 'Configuración Tipo Servidor'
+        verbose_name_plural = 'Configuración Tipos de Servidores'
 
+    def __str__(self):
+        return f'{self.nbTipo}'
