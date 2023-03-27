@@ -41,7 +41,7 @@ class ActualizacionBiPage(LoginRequiredMixin, TemplateView):
     @method_decorator(permission_required('permisos.actualizacion_bi', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            print(request.user.get_all_permissions())  # Imprime los permisos del usuario
+            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
             return super().dispatch(request, *args, **kwargs)
         else:
             return redirect('users_app:user-login')
@@ -69,7 +69,7 @@ class EmbedReportPage(LoginRequiredMixin, TemplateView):
     @method_decorator(permission_required('permisos.informe_bi', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            print(request.user.get_all_permissions())  # Imprime los permisos del usuario
+            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
             return super().dispatch(request, *args, **kwargs)
         else:
             return redirect('users_app:user-login')

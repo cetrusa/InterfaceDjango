@@ -3,6 +3,7 @@ import json
 import pymysql
 import os, random, string
 from unipath import Path
+import datetime
 BASE_DIR = Path(__file__).ancestor(3)
 
 pymysql.install_as_MySQLdb()
@@ -61,10 +62,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'InterfaceDjango.middleware.auto_logout.AutoLogoutMiddleware',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 ROOT_URLCONF = 'InterfaceDjango.urls'
+
+# Tiempo de inactividad antes de cerrar la sesión automáticamente (en segundos)
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_COOKIE_AGE = 1800  # 1800 segundos son 30 minutos
+
 
 TEMPLATES = [
     {

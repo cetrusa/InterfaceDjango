@@ -34,7 +34,7 @@ class Cubo_Ventas:
         consig = 0
         nd = 0
         sql = StaticPage.nmProcedureExcel
-        StaticPage.archivo_cubo_ventas = f"Cubo_de_Ventas_{StaticPage.nmCarpeta}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.xlsx"
+        StaticPage.archivo_cubo_ventas = f"Cubo_de_Ventas_{StaticPage.name}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.xlsx"
         StaticPage.file_path = os.path.join('media', StaticPage.archivo_cubo_ventas)
         with pd.ExcelWriter( StaticPage.file_path, engine='openpyxl') as writer:
             for hoja in StaticPage.txProcedureExcel:

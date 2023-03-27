@@ -27,26 +27,26 @@ class ConfigBasic():
     try:
         StaticPage = StaticPage()
         def __init__(self,database_name):
-            StaticPage.nmCarpeta = str(database_name)
+            StaticPage.name = str(database_name)
             
-            # StaticPage.nmCarpeta = 'altimax'
+            # StaticPage.name = 'altimax'
             StaticPage.dir_actual = str('puente1dia')
             StaticPage.nmDt = StaticPage.dir_actual
-            logging.info(StaticPage.nmCarpeta)
+            logging.info(StaticPage.name)
             logging.info(StaticPage.nmDt)
 
             StaticPage.con = con.ConexionMariadb3(get_secret("DB_USERNAME"),get_secret("DB_PASS"),get_secret("DB_HOST"),int(get_secret("DB_PORT")),get_secret("DB_NAME"))
             
             with StaticPage.con.connect() as connectionout:
                 StaticPage.cursor = connectionout.execution_options(isolation_level="READ COMMITTED")
-                sql = text(f"SELECT * FROM powerbi_adm.conf_empresas WHERE nmCarpeta = '{StaticPage.nmCarpeta}';")
+                sql = text(f"SELECT * FROM powerbi_adm.conf_empresas WHERE name = '{StaticPage.name}';")
                 result = pd.read_sql_query(sql=sql, con=StaticPage.cursor)
                 df = pd.DataFrame(result)
-                StaticPage.nbEmpresa= df['nbEmpresa'].values[0]
-                #logging.info(nbEmpresa)
+                StaticPage.id= df['id'].values[0]
+                #logging.info(id)
                 StaticPage.nmEmpresa=df['nmEmpresa'].values[0]
                 logging.info(StaticPage.nmEmpresa)
-                StaticPage.nmCarpeta=df['nmCarpeta'].values[0]
+                StaticPage.name=df['name'].values[0]
                 StaticPage.nbServerSidis=df['nbServerSidis'].values[0]
                 StaticPage.dbSidis=df['dbSidis'].values[0]
                 StaticPage.nbServerBi=df['nbServerBi'].values[0]

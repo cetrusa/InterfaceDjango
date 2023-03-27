@@ -11,7 +11,7 @@ def grabar_auditoria(request, detalle):
     usuario = request.user
     ip = gc.ip
     transaccion = request.path_info
-    database_name = StaticPage.nmCarpeta
+    database_name = StaticPage.name
     city = gc.city
 
     # Creamos una instancia del modelo RegistroAuditoria con los datos obtenidos

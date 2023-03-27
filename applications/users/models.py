@@ -9,12 +9,13 @@ from .managers import UserManager
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
+from applications.permisos.models import ConfEmpresas
 
-class Database(models.Model):
-    name = models.CharField(max_length=100)
+# class Database(models.Model):
+#     name = models.CharField(max_length=100)
     
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 class User(AbstractBaseUser,PermissionsMixin):
     GENDER_CHOISES = (
@@ -28,7 +29,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     apellidos = models.CharField(max_length=50,verbose_name='Apellidos')
     genero = models.CharField(max_length=1,choices=GENDER_CHOISES, blank=True,verbose_name='Género')
     codregistro = models.CharField(max_length=6, blank=True,verbose_name='Código de Registro')
-    databases = models.ManyToManyField(Database, blank=True,verbose_name='Bases de datos')
+    conf_empresas = models.ManyToManyField(ConfEmpresas, blank=True,verbose_name='Bases de datos')
     #
     is_staff = models.BooleanField(default=False,verbose_name='Administrador')
     is_active= models.BooleanField(default=False,verbose_name='Activo')
@@ -51,7 +52,7 @@ class User(AbstractBaseUser,PermissionsMixin):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    databases = models.ManyToManyField(Database)
+    conf_empresas = models.ManyToManyField(ConfEmpresas)
     
 class RegistroAuditoria(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

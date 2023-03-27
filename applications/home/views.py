@@ -75,7 +75,7 @@ class CuboPage(LoginRequiredMixin, TemplateView):
     @method_decorator(permission_required('permisos.cubo', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            print(request.user.get_all_permissions())  # Imprime los permisos del usuario
+            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
             return super().dispatch(request, *args, **kwargs)
         else:
             return redirect('users_app:user-login')
@@ -115,7 +115,7 @@ class InterfacePage(LoginRequiredMixin, TemplateView):
     @method_decorator(permission_required('permisos.interface', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            print(request.user.get_all_permissions())  # Imprime los permisos del usuario
+            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
             return super().dispatch(request, *args, **kwargs)
         else:
             return redirect('users_app:user-login')
@@ -152,7 +152,7 @@ class PlanoPage(LoginRequiredMixin, TemplateView):
     @method_decorator(permission_required('permisos.plano', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            print(request.user.get_all_permissions())  # Imprime los permisos del usuario
+            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
             return super().dispatch(request, *args, **kwargs)
         else:
             return redirect('users_app:user-login')
@@ -188,7 +188,7 @@ class ActualizacionPage(LoginRequiredMixin, TemplateView):
     @method_decorator(permission_required('permisos.actualizar_base', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            print(request.user.get_all_permissions())  # Imprime los permisos del usuario
+            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
             return super().dispatch(request, *args, **kwargs)
         else:
             return redirect('users_app:user-login')

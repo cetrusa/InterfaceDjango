@@ -26,7 +26,8 @@ from .forms import (
     VerificationForm
 )
 #
-from .models import User,Database
+from .models import User
+from applications.permisos.models import ConfEmpresas
 # 
 from .functions import code_generator
 
@@ -135,14 +136,14 @@ class CodeVerificationView(FormView):
         return super(CodeVerificationView, self).form_valid(form)
 
 class DatabaseView(ListView):
-    model = Database
+    model = ConfEmpresas
     template_name = 'includes/database_list.html'
 
     def get_queryset(self):
-        return self.request.user.databases.all()
+        return self.request.user.conf_empresas.all()
 
 def database_list(request):
-    databases = request.user.databases.all()
+    databases = request.user.conf_empresas.all()
     database_list = [database.name for database in databases]
     return JsonResponse({'database_list': database_list})
 

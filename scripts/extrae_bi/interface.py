@@ -39,7 +39,7 @@ class Interface_Contable:
         consig = 0
         nd = 0
         sql = StaticPage.nmProcedureInterface
-        StaticPage.archivo_cubo_ventas = f"Interface_Contable_{StaticPage.nmCarpeta}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.xlsx"
+        StaticPage.archivo_cubo_ventas = f"Interface_Contable_{StaticPage.name}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.xlsx"
         StaticPage.file_path = os.path.join('media', StaticPage.archivo_cubo_ventas)
         if StaticPage.txProcedureInterface:    
             with pd.ExcelWriter( StaticPage.file_path, engine='openpyxl') as writer:
@@ -61,7 +61,7 @@ class Interface_Contable:
         IdDs = ''
         sql = StaticPage.nmProcedureCsv
         sql2 = StaticPage.nmProcedureCsv2
-        StaticPage.archivo_plano = f"Plano_{StaticPage.nmCarpeta}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.zip"
+        StaticPage.archivo_plano = f"Plano_{StaticPage.name}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.zip"
         StaticPage.file_path = os.path.join('media', StaticPage.archivo_plano)
         if StaticPage.txProcedureCsv:
             with zipfile.ZipFile(StaticPage.file_path, "w") as zf:
