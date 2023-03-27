@@ -35,8 +35,8 @@ class ConfEmpresas(models.Model):
     dbSidis = models.CharField(max_length=150, null=True, blank=True, verbose_name='Base de datos Sidis')
     nbServerBi = models.BigIntegerField(null=True, blank=True,verbose_name='Id Servidor PowerBi')
     dbBi = models.CharField(max_length=150, null=True, blank=True,verbose_name='Base de datos Bi')
-    txProcedureExtrae = models.CharField(max_length=100, null=True, blank=True,verbose_name='Procedimiento Extractor')
-    txProcedureCargue = models.TextField(null=True, blank=True,verbose_name='Proceso sql del Cargue')
+    txProcedureExtrae = models.CharField(max_length=100, null=True, blank=True,verbose_name='Procesos sql Extractor')
+    txProcedureCargue = models.TextField(null=True, blank=True,verbose_name='Procesos sql del Cargue')
     nmProcedureInterface = models.CharField(max_length=30, null=True, blank=True,verbose_name='Procedimiento Interface')
     txProcedureInterface = models.TextField(null=True, blank=True,verbose_name='Procesos sql de Interface')
     nmProcedureExcel = models.CharField(max_length=30, null=True, blank=True,verbose_name='Procedimiento a Excel')
@@ -55,7 +55,7 @@ class ConfEmpresas(models.Model):
     estado = models.IntegerField(null=True, blank=True,verbose_name='Activo')
 
     def __str__(self):
-        return f'{self.id}-{self.name}-{self.nmEmpresa}'
+        return f'{self.id}-{self.nmEmpresa}'
     
     class Meta:
         db_table = 'conf_empresas'
@@ -66,11 +66,11 @@ class ConfEmpresas(models.Model):
     
 
 class ConfServer(models.Model):
-    nbServer = models.BigIntegerField(primary_key=True)
-    nmServer = models.CharField(max_length=30, null=True, blank=True)
-    hostServer = models.CharField(max_length=100, null=True, blank=True)
-    portServer = models.CharField(max_length=10, null=True, blank=True)
-    nbTipo = models.BigIntegerField(null=True, blank=True)
+    nbServer = models.BigIntegerField(primary_key=True,verbose_name='Id del Servidor')
+    nmServer = models.CharField(max_length=30, null=True, blank=True,verbose_name='Descripción del Servidor')
+    hostServer = models.CharField(max_length=100, null=True, blank=True, verbose_name='Host')
+    portServer = models.CharField(max_length=10, null=True, blank=True,verbose_name='Puerto')
+    nbTipo = models.BigIntegerField(null=True, blank=True,verbose_name='Tipo')
     
     def __str__(self):
         return f'{self.nbServer}-{self.nmServer}'
@@ -83,12 +83,12 @@ class ConfServer(models.Model):
         
         
 class ConfSql(models.Model):
-    nbSql = models.BigIntegerField(primary_key=True)
-    txSql = models.TextField(null=True, blank=True)
-    nmReporte = models.CharField(max_length=100, null=True, blank=True)
-    txTabla = models.CharField(max_length=100, null=True, blank=True)
-    txDescripcion = models.CharField(max_length=255, null=True, blank=True)
-    nmProcedure_out = models.CharField(max_length=100, null=True, blank=True)
+    nbSql = models.BigIntegerField(primary_key=True,verbose_name='Id del Proceso')
+    txSql = models.TextField(null=True, blank=True,verbose_name='Sql Script')
+    nmReporte = models.CharField(max_length=100, null=True, blank=True,verbose_name='Nombre del Proceso')
+    txTabla = models.CharField(max_length=100, null=True, blank=True,verbose_name='Tabla de Inserción')
+    txDescripcion = models.CharField(max_length=255, null=True, blank=True,verbose_name='Descripción del Proceso')
+    nmProcedure_out = models.CharField(max_length=100, null=True, blank=True,verbose_name='Nombre del Procedimiento Extractor')
     nmProcedure_in = models.CharField(max_length=100, null=True, blank=True)
     
     def __str__(self):
@@ -97,13 +97,13 @@ class ConfSql(models.Model):
     class Meta:
         db_table = 'conf_sql'
         # managed = False
-        verbose_name = 'Configuración Procedimiento Sql'
-        verbose_name_plural = 'Configuración Procedimientos Sql'
+        verbose_name = 'Configuración Proceso Sql'
+        verbose_name_plural = 'Configuración Procesos Sql'
 
 class ConfTipo(models.Model):
-    nbTipo = models.BigIntegerField(primary_key=True)
-    nmUsr = models.CharField(max_length=50, null=True, blank=True)
-    txPass = models.TextField(null=True, blank=True)
+    nbTipo = models.BigIntegerField(primary_key=True,verbose_name='Id')
+    nmUsr = models.CharField(max_length=50, null=True, blank=True,verbose_name='usuario')
+    txPass = models.TextField(null=True, blank=True,verbose_name='password')
 
     class Meta:
         db_table = 'conf_tipo'
