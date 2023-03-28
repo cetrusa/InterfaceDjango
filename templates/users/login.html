@@ -53,6 +53,9 @@ Login
                             <input type="checkbox" class="form-check-input" id="rememberMe">
                             <label class="form-check-label" for="rememberMe">Recuérdame</label>
                         </div>
+                        <div>
+                            {{ form.captcha }}
+                        </div>
                         <button type="submit" class="btn btn-primary">Login</button>
                     </form>
                 </div>
@@ -60,4 +63,6 @@ Login
         </div>
     </div>
 </div>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {% endblock content %}

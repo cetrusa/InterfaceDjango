@@ -52,7 +52,9 @@ LOCAL_APPS = (
     'applications.permisos',
 )
 
-THIRD_PARTY_APPS = ()
+THIRD_PARTY_APPS = (
+    'captcha',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -71,6 +73,9 @@ ROOT_URLCONF = 'InterfaceDjango.urls'
 # Tiempo de inactividad antes de cerrar la sesión automáticamente (en segundos)
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_COOKIE_AGE = 1800  # 1800 segundos son 30 minutos
+
+RECAPTCHA_PUBLIC_KEY = '6LeffTwlAAAAAKYsF2RHBuWmMxSMYLo7DvWb_szY'
+RECAPTCHA_PRIVATE_KEY = '6LeffTwlAAAAAMwYZgijw9H4HQLMssatf7xayp8k'
 
 TEMPLATES = [
     {
