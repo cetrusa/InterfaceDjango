@@ -72,7 +72,6 @@ ROOT_URLCONF = 'InterfaceDjango.urls'
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_COOKIE_AGE = 1800  # 1800 segundos son 30 minutos
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

@@ -58,13 +58,13 @@ class UserRegisterView(FormView):
         # send_mail(asunto, mensaje, email_remitente, [form.cleaned_data['email'],])
         # # redirigir a pantalla de valdiacion
 
-        # return HttpResponseRedirect(
-        #     reverse(
-        #         'users_app:user-verification',
-        #         kwargs={'pk': usuario.id}
-        #     )
-        # )
-
+        return HttpResponseRedirect(
+            reverse(
+                'users_app:user-verification',
+                kwargs={'pk': usuario.id}
+            )
+        )
+      
 
 
 class LoginUser(FormView):

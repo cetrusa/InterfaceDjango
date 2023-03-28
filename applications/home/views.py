@@ -13,11 +13,7 @@ from applications.users.decorators import registrar_auditoria
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required, permission_required
-
-
-
-
-
+from django.http import HttpResponseRedirect
 from scripts.conexion import Conexion
 from scripts.config import ConfigBasic
 from scripts.StaticPage import StaticPage
@@ -44,7 +40,7 @@ class HomePage(LoginRequiredMixin, TemplateView):
 
 
 class DownloadFileView(View):
-    template_name = "home/cubo.html"
+    template_name=StaticPage.template_name
     login_url = reverse_lazy('users_app:user-login')
     def get(self, request):
         file_path = request.session.get('file_path')
@@ -54,20 +50,22 @@ class DownloadFileView(View):
         return response
 
 class DeleteFileView(View):
-    template_name = "home/cubo.html"
+    template_name=StaticPage.template_name
     login_url = reverse_lazy('users_app:user-login')
     def post(self, request):
         file_path = request.session.get('file_path')
         try:
             os.remove(file_path)
-            return JsonResponse({'success': True, 'error_message': ''
-                                 })
+            # Cambia esto para redirigir al usuario
+            return HttpResponseRedirect(reverse(self.template_name))
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
 
 
+
 class CuboPage(LoginRequiredMixin, TemplateView):
     template_name = "home/cubo.html"
+    StaticPage.template_name = template_name
     login_url = reverse_lazy('users_app:user-login')
 
     # @method_decorator(login_required(login_url=reverse_lazy('users_app:user-login')))
@@ -109,6 +107,7 @@ class CuboPage(LoginRequiredMixin, TemplateView):
         
 class InterfacePage(LoginRequiredMixin, TemplateView):
     template_name = "home/interface.html"
+    StaticPage.template_name = template_name
     login_url = reverse_lazy('users_app:user-login')
     
     @method_decorator(registrar_auditoria)
@@ -136,7 +135,7 @@ class InterfacePage(LoginRequiredMixin, TemplateView):
             interface_contable = Interface_Contable(database_name, IdtReporteIni, IdtReporteFin)
             interface_contable.Procedimiento_a_Excel()
             file_path = StaticPage.file_path
-            file_name = StaticPage.archivo_cubo_ventas
+            file_name = StaticPage.archivo_plano
             request.session['file_path'] = file_path
             request.session['file_name'] = file_name
             return JsonResponse({'success': True, 'error_message': '','file_path':file_path})
@@ -146,6 +145,7 @@ class InterfacePage(LoginRequiredMixin, TemplateView):
 
 class PlanoPage(LoginRequiredMixin, TemplateView):
     template_name = "home/plano.html"
+    StaticPage.template_name = template_name
     login_url = reverse_lazy('users_app:user-login')
 
     @method_decorator(registrar_auditoria)
@@ -165,11 +165,13 @@ class PlanoPage(LoginRequiredMixin, TemplateView):
         request.session['database_name'] = database_name
         IdtReporteIni = request.POST.get('IdtReporteIni')
         IdtReporteFin = request.POST.get('IdtReporteFin')
+        
         if not database_name:
             return JsonResponse({'success': False, 'error_message': 'Debe seleccionar una base de datos.'})
         try:
             # Instanciamos la clase Extrae_Bi con el nombre de la base de datos como argumento
             interface_contable = Interface_Contable(database_name, IdtReporteIni, IdtReporteFin)
+            print('aqui')
             interface_contable.Procedimiento_a_Plano()
             file_path = StaticPage.file_path
             file_name = StaticPage.archivo_plano

@@ -41,7 +41,7 @@ class Interface_Contable:
         sql = StaticPage.nmProcedureInterface
         StaticPage.archivo_cubo_ventas = f"Interface_Contable_{StaticPage.name}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.xlsx"
         StaticPage.file_path = os.path.join('media', StaticPage.archivo_cubo_ventas)
-        if StaticPage.txProcedureInterface:    
+        if StaticPage.txProcedureInterface != '' or StaticPage.txProcedureInterface != '[]':    
             with pd.ExcelWriter( StaticPage.file_path, engine='openpyxl') as writer:
                 for hoja in StaticPage.txProcedureInterface:
                     if a == 'powerbi_tym_eje':
@@ -59,30 +59,30 @@ class Interface_Contable:
     def Procedimiento_a_Plano(self):
         a = StaticPage.dbBi
         IdDs = ''
-        sql = StaticPage.nmProcedureCsv
-        sql2 = StaticPage.nmProcedureCsv2
         StaticPage.archivo_plano = f"Plano_{StaticPage.name}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.zip"
         StaticPage.file_path = os.path.join('media', StaticPage.archivo_plano)
         if StaticPage.txProcedureCsv:
+            sql = StaticPage.nmProcedureCsv
             with zipfile.ZipFile(StaticPage.file_path, "w") as zf:
                 for a in StaticPage.txProcedureCsv:
-                    print("aqui toy")
+                    
                     with zf.open(a+'.txt', "w") as buffer:
                         sqlout = text(f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{a}');")
                         with StaticPage.conin2.connect() as connectionout:
                             cursor = connectionout.execution_options(isolation_level="READ COMMITTED")
                             resultado = pd.read_sql_query(sql=sqlout, con=cursor)
                             resultado.to_csv(buffer,sep='|',index=False,float_format='%.2f',header=True)
-                            # time.sleep(1)
-        elif StaticPage.txProcedureCsv2:    
+        elif StaticPage.txProcedureCsv2:
+            sql2 = StaticPage.nmProcedureCsv2   
             with zipfile.ZipFile(StaticPage.file_path, "w") as zf:
+                print(StaticPage.txProcedureCsv2)
                 for a in StaticPage.txProcedureCsv2:
                     with zf.open(a+'.txt', "w") as buffer:
-                        sqlout = text(f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{a}');")
+                        sqlout = text(f"CALL {sql2}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{a}');")
                         with StaticPage.conin2.connect() as connectionout:
                             cursor = connectionout.execution_options(isolation_level="READ COMMITTED")
                             resultado = pd.read_sql_query(sql=sqlout, con=cursor)
                             resultado.to_csv(buffer,sep=',',index=False,header=False,float_format='%.0f')
                             # time.sleep(1)
         else:
-            return JsonResponse({'success': True, 'error_message': f'La empresa {StaticPage.nmEmpresa} no maneja interface contable'})
+            return JsonResponse({'success': True, 'error_message': f'La empresa {StaticPage.nmEmpresa} no maneja archivo plano'})

@@ -67,3 +67,4 @@ class StaticPage():
     file_path=''
     archivo_cubo_ventas=''
     archivo_plano=''
+    template_name = ''
