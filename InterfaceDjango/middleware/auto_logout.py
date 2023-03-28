@@ -19,7 +19,7 @@ class AutoLogoutMiddleware:
                 if current_session.expire_date <= current_time:
                     logout(request)
                     return HttpResponseRedirect(
-                        reverse(
+                        reverse_lazy(
                             'users_app:user-login'
                         )
                     )
