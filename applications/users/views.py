@@ -35,7 +35,7 @@ from .functions import code_generator
 class UserRegisterView(FormView):
     template_name = 'users/register.html'
     form_class = UserRegisterForm
-    success_url = '/'
+    success_url = reverse_lazy('users_app:user-login')
 
     def form_valid(self, form):
         # generamos el codigo
