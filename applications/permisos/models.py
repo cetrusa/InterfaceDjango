@@ -12,7 +12,7 @@ class PermisosBarra(models.Model):
             ('informe_bi', 'Informe Bi'),
             ('actualizar_base', 'Actualzación de datos'),
             ('actualizacion_bi', 'Actualizar Bi'),
-            ('nuevo', 'nueva opción'),
+            ('admin', 'Ir al Administrador'),
         )
         
 class ConfDt(models.Model):

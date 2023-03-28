@@ -32,8 +32,8 @@
     {% if perms.permisos.actualizacion_bi %}
     <a href="{% url 'bi_app:actualizacion_bi' %}"><i class="fas fa-tv"></i><span>Actualización PowerBi</span></a>
     {% endif %}
-    {% if perms.permisos.nuevo %}
-    <a href="#"><i class="fas fa-sliders-h"></i><span>Configuración</span></a>
+    {% if perms.permisos.admin %}
+    <a href="{% url 'admin:index' %}"><i class="fas fa-sliders-h"></i><span>Configuración</span></a>
     {% endif %}
 
       
