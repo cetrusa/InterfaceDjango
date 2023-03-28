@@ -27,6 +27,7 @@ class Cubo_Ventas:
         ConfigBasic(database_name)
         StaticPage.IdtReporteIni=IdtReporteIni
         StaticPage.IdtReporteFin=IdtReporteFin
+    
     def Procedimiento_a_Excel(self):
         a = StaticPage.dbBi
         IdDs = ''

@@ -1,4 +1,3 @@
-
 import os,sys
 # from unipath import Path
 import pandas as pd
@@ -41,18 +40,21 @@ class Interface_Contable:
         sql = StaticPage.nmProcedureInterface
         StaticPage.archivo_cubo_ventas = f"Interface_Contable_{StaticPage.name}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.xlsx"
         StaticPage.file_path = os.path.join('media', StaticPage.archivo_cubo_ventas)
-        if StaticPage.txProcedureInterface != '' or StaticPage.txProcedureInterface != '[]':    
+        if StaticPage.txProcedureInterface:    
             with pd.ExcelWriter( StaticPage.file_path, engine='openpyxl') as writer:
                 for hoja in StaticPage.txProcedureInterface:
                     if a == 'powerbi_tym_eje':
                         sqlout = text(f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{hoja}','{compra}','{consig}','{nd}');")     
                     else:
                         sqlout = text(f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{hoja}');")
-                    with StaticPage.conin2.connect() as connectionout:
-                        cursor = connectionout.execution_options(isolation_level="READ COMMITTED")
-                        resultado = pd.read_sql_query(sql=sqlout, con=cursor)
-                        resultado.to_excel(writer, index=False, sheet_name=hoja, header=True)
-                        writer.sheets[hoja].sheet_state = 'visible'
+                    try:
+                        with StaticPage.conin2.connect() as connectionout:
+                            cursor = connectionout.execution_options(isolation_level="READ COMMITTED")
+                            resultado = pd.read_sql_query(sql=sqlout, con=cursor)
+                            resultado.to_excel(writer, index=False, sheet_name=hoja, header=True)
+                            writer.sheets[hoja].sheet_state = 'visible'
+                    except Exception as e:
+                        print(logging.info(f'No fue posible generar la información por {e}'))
         else:
             return JsonResponse({'success': True, 'error_message': f'La empresa {StaticPage.nmEmpresa} no maneja interface contable'})
                     
