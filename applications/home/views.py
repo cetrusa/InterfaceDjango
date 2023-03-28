@@ -68,7 +68,6 @@ class CuboPage(LoginRequiredMixin, TemplateView):
     StaticPage.template_name = template_name
     login_url = reverse_lazy('users_app:user-login')
 
-    # @method_decorator(login_required(login_url=reverse_lazy('users_app:user-login')))
     @method_decorator(registrar_auditoria)
     @method_decorator(permission_required('permisos.cubo', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
@@ -78,7 +77,6 @@ class CuboPage(LoginRequiredMixin, TemplateView):
         else:
             return redirect('users_app:user-login')
     
-    
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
         print(f"cubo este es del post {database_name}")
@@ -86,10 +84,8 @@ class CuboPage(LoginRequiredMixin, TemplateView):
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
-        
         IdtReporteIni = request.POST.get('IdtReporteIni')
         IdtReporteFin = request.POST.get('IdtReporteFin')
-
         if not database_name:
             return JsonResponse({'success': False, 'error_message': 'Debe seleccionar una base de datos.'})
         try:
@@ -97,7 +93,6 @@ class CuboPage(LoginRequiredMixin, TemplateView):
             cubo_ventas = Cubo_Ventas(database_name, IdtReporteIni, IdtReporteFin)
             cubo_ventas.Procedimiento_a_Excel()
             file_path = StaticPage.file_path
-            print (file_path)
             file_name = StaticPage.archivo_cubo_ventas
             request.session['file_path'] = file_path
             request.session['file_name'] = file_name
@@ -131,7 +126,7 @@ class InterfacePage(LoginRequiredMixin, TemplateView):
         if not database_name:
             return JsonResponse({'success': False, 'error_message': 'Debe seleccionar una base de datos.'})
         try:
-            # Instanciamos la clase Extrae_Bi con el nombre de la base de datos como argumento
+            # Instanciamos la clase Interface_Contable con el nombre de la base de datos como argumento
             interface_contable = Interface_Contable(database_name, IdtReporteIni, IdtReporteFin)
             interface_contable.Procedimiento_a_Excel()
             file_path = StaticPage.file_path
