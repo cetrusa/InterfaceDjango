@@ -20,8 +20,13 @@ urlpatterns = [
     ),
     path(
         'database/', 
-        views.DatabaseView.as_view(),
+        views.DatabaseListView.as_view(),
         name='user-database',
+    ),
+    path(
+        'base/', 
+        views.BaseView.as_view(),
+        name='base',
     ),
     path('database/list/', views.database_list, name='database_list'),
     path(

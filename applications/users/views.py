@@ -9,10 +9,12 @@ from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
 
+
 from django.views.generic import (
     View,
     CreateView,
     ListView,
+    TemplateView,
 )
 
 from django.views.generic.edit import (
@@ -140,16 +142,30 @@ class CodeVerificationView(FormView):
         )
         return super(CodeVerificationView, self).form_valid(form)
 
-class DatabaseView(ListView):
+class BaseView(TemplateView):
+    template_name = 'base.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        databases = self.request.user.conf_empresas.all().order_by('nmEmpresa')
+        database_list = [{'name': database.name, 'nmEmpresa': database.nmEmpresa} for database in databases]
+        sorted_database_list = sorted(database_list, key=lambda x: x['nmEmpresa'])
+        database_name = self.request.session.get('database_select', None)
+        context['database_list'] = sorted_database_list
+        context['database_name'] = database_name
+        return context
+
+
+class DatabaseListView(ListView):
     model = ConfEmpresas
+    context_object_name = 'databases'
     template_name = 'includes/database_list.html'
 
     def get_queryset(self):
-        return self.request.user.conf_empresas.all()
+        return self.request.user.conf_empresas.all().order_by('nmEmpresa')
+
 
 def database_list(request):
-    databases = request.user.conf_empresas.all()
-    database_list = [database.name for database in databases]
+    databases = request.user.conf_empresas.all().order_by('nmEmpresa')
+    database_list = [{'database_name': database.name, 'database_nmEmpresa': database.nmEmpresa} for database in databases]
     return JsonResponse({'database_list': database_list})
-
-

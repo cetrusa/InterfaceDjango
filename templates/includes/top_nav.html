@@ -6,7 +6,7 @@
     <div class="left-area">
         <h3>Interface <span>Amovil</span></h3>
     </div>
-    <form class="right" action="{% url 'bi_app:actualizacion_bi' %}" method="post" id="myForm">
+    <form class="right" action="{% url form_url %}" method="post" id="myForm">
         {% csrf_token %}
         <div class="form-group">
             <select name="database_select" required class="text-control text-uppercase" id="database_select">

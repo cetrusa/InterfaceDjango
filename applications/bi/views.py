@@ -10,6 +10,7 @@ from django.http import HttpResponse,FileResponse,JsonResponse
 from django.views.generic import (
     TemplateView,View
 )
+from applications.users.views import BaseView
 
 from scripts.conexion import Conexion
 from scripts.StaticPage import StaticPage
@@ -33,19 +34,16 @@ class EliminarReporteFetched(View):
         return JsonResponse({'success': True})
     
     
-class ActualizacionBiPage(LoginRequiredMixin, TemplateView):
+class ActualizacionBiPage(LoginRequiredMixin, BaseView):
     template_name = "bi/actualizacion.html"
+    StaticPage.template_name = template_name
     login_url = reverse_lazy('users_app:user-login')
     
     @method_decorator(registrar_auditoria)
     @method_decorator(permission_required('permisos.actualizacion_bi', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            return redirect('users_app:user-login')
-            
+        return super().dispatch(request, *args, **kwargs)
+                
     def post(self, request, *args, **kwargs):
         database_name = request.session.get('database_name') or request.POST.get('database_select')
         if not database_name:
@@ -60,34 +58,45 @@ class ActualizacionBiPage(LoginRequiredMixin, TemplateView):
             return JsonResponse({'success': True, 'error_message': ''})
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
+        
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
     
-class EmbedReportPage(LoginRequiredMixin, TemplateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_url'] = 'bi_app:actualizacion_bi'
+        return context
+    
+class EmbedReportPage(LoginRequiredMixin, BaseView):
     template_name = "bi/reporte_bi.html"
+    StaticPage.template_name = template_name
     login_url = reverse_lazy('users_app:user-login')
     
     @method_decorator(registrar_auditoria)
     @method_decorator(permission_required('permisos.informe_bi', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            return redirect('users_app:user-login')
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
-        request.session['database_name'] = database_name
+        
         if not database_name:
             return redirect('home_app:panel')
         
-        print(f"embebed este es del post {database_name}")
-
+        request.session['database_name'] = database_name
         try:
             config = ConfigBasic(database_name)    
             url_powerbi= config.StaticPage.url_powerbi
-            print(url_powerbi)
             return JsonResponse({'url_powerbi': url_powerbi})
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
+        
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_url'] = 'bi_app:reporte_bi'
+        return context
         
 

@@ -64,10 +64,10 @@ class Interface_Contable:
         StaticPage.archivo_plano = f"Plano_{StaticPage.name}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.zip"
         StaticPage.file_path = os.path.join('media', StaticPage.archivo_plano)
         if StaticPage.txProcedureCsv:
+            print('aqui')
             sql = StaticPage.nmProcedureCsv
             with zipfile.ZipFile(StaticPage.file_path, "w") as zf:
                 for a in StaticPage.txProcedureCsv:
-                    
                     with zf.open(a+'.txt', "w") as buffer:
                         sqlout = text(f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{a}');")
                         with StaticPage.conin2.connect() as connectionout:

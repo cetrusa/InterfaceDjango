@@ -1,0 +1,50 @@
+<!-- Selector de bases de datos -->
+<select class="form-control" id="database_select">
+    {% for database_name,database_nmEmpresa in databases_list %}
+    <option value="{{ database_name }}">{{ database_nmEmpresa }} </option>
+    {% endfor %}
+</select>
+
+<!-- Código JavaScript relacionado con el selector de bases de datos -->
+<script>
+    $(document).ready(function () {
+        $.get('{% url "users_app:database_list" %}', function (data) {
+            var databaseSelect = $('#database_select');
+            $.each(data.database_list, function (index, database) {
+                databaseSelect.append('<option value="' + database.database_name + '">' + database.database_nmEmpresa + '</option>');
+            });
+
+            var databaseName = window.sessionStorage.getItem("database_name");
+
+            if (databaseName) {
+                document.getElementById("database_select").value = databaseName;
+            }
+        });
+
+        document.getElementById("database_select").addEventListener("change", function () {
+            var select = this;
+            var database = select.options[select.selectedIndex].value;
+            window.sessionStorage.setItem("database_name", database);
+            updateDatabaseName(database);
+        });
+    });
+
+    function updateDatabaseName(database) {
+        var csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "{% url form_url %}", true);
+        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (this.readyState === XMLHttpRequest.DONE) {
+                if (this.status === 200) {
+                    // Si la respuesta del servidor es exitosa, recarga la página
+                    location.reload();
+                } else {
+                    console.log("Error al actualizar el valor de database_name en la sesión:", this.status, this.responseText);
+                }
+            }
+        };
+        xhr.send("database_select=" + encodeURIComponent(database));
+    }
+</script>

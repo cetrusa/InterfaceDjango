@@ -26,8 +26,12 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import (
     TemplateView
 )
+from applications.users.views import BaseView
 
-class HomePage(LoginRequiredMixin, TemplateView):
+
+    
+    
+class HomePage(LoginRequiredMixin, BaseView):
     template_name = "home/panel.html"
     login_url = reverse_lazy('users_app:user-login')
     
@@ -37,6 +41,14 @@ class HomePage(LoginRequiredMixin, TemplateView):
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
+        
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_url'] = 'home_app:panel'
+        return context
 
 
 class DownloadFileView(View):
@@ -61,9 +73,8 @@ class DeleteFileView(View):
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
 
-
-
-class CuboPage(LoginRequiredMixin, TemplateView):
+    
+class CuboPage(LoginRequiredMixin, BaseView):
     template_name = "home/cubo.html"
     StaticPage.template_name = template_name
     login_url = reverse_lazy('users_app:user-login')
@@ -71,25 +82,17 @@ class CuboPage(LoginRequiredMixin, TemplateView):
     @method_decorator(registrar_auditoria)
     @method_decorator(permission_required('permisos.cubo', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            return redirect('users_app:user-login')
+        return super().dispatch(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
-        print(f"cubo este es del post {database_name}")
         if not database_name:
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
         IdtReporteIni = request.POST.get('IdtReporteIni')
         IdtReporteFin = request.POST.get('IdtReporteFin')
-        if not database_name:
-            return JsonResponse({'success': False, 'error_message': 'Debe seleccionar una base de datos.'})
         try:
-            # Instanciamos la clase Cubo_Ventas con el nombre de la base de datos como argumento
             cubo_ventas = Cubo_Ventas(database_name, IdtReporteIni, IdtReporteFin)
             cubo_ventas.Procedimiento_a_Excel()
             file_path = StaticPage.file_path
@@ -100,7 +103,15 @@ class CuboPage(LoginRequiredMixin, TemplateView):
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
         
-class InterfacePage(LoginRequiredMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_url'] = 'home_app:cubo'
+        return context
+        
+class InterfacePage(LoginRequiredMixin, BaseView):
     template_name = "home/interface.html"
     StaticPage.template_name = template_name
     login_url = reverse_lazy('users_app:user-login')
@@ -108,23 +119,16 @@ class InterfacePage(LoginRequiredMixin, TemplateView):
     @method_decorator(registrar_auditoria)
     @method_decorator(permission_required('permisos.interface', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            return redirect('users_app:user-login')
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
-        print(f"interface este es del post {database_name}")
         if not database_name:
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
         IdtReporteIni = request.POST.get('IdtReporteIni')
         IdtReporteFin = request.POST.get('IdtReporteFin')
-        if not database_name:
-            return JsonResponse({'success': False, 'error_message': 'Debe seleccionar una base de datos.'})
         try:
             # Instanciamos la clase Interface_Contable con el nombre de la base de datos como argumento
             interface_contable = Interface_Contable(database_name, IdtReporteIni, IdtReporteFin)
@@ -137,8 +141,16 @@ class InterfacePage(LoginRequiredMixin, TemplateView):
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
         
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_url'] = 'home_app:interface'
+        return context
+        
 
-class PlanoPage(LoginRequiredMixin, TemplateView):
+class PlanoPage(LoginRequiredMixin, BaseView):
     template_name = "home/plano.html"
     StaticPage.template_name = template_name
     login_url = reverse_lazy('users_app:user-login')
@@ -146,23 +158,18 @@ class PlanoPage(LoginRequiredMixin, TemplateView):
     @method_decorator(registrar_auditoria)
     @method_decorator(permission_required('permisos.plano', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            return redirect('users_app:user-login')
+        return super().dispatch(request, *args, **kwargs)
         
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
+        print(database_name)
         if not database_name:
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
         IdtReporteIni = request.POST.get('IdtReporteIni')
         IdtReporteFin = request.POST.get('IdtReporteFin')
-        
-        if not database_name:
-            return JsonResponse({'success': False, 'error_message': 'Debe seleccionar una base de datos.'})
+
         try:
             # Instanciamos la clase Extrae_Bi con el nombre de la base de datos como argumento
             interface_contable = Interface_Contable(database_name, IdtReporteIni, IdtReporteFin)
@@ -175,29 +182,32 @@ class PlanoPage(LoginRequiredMixin, TemplateView):
             return JsonResponse({'success': True, 'error_message': '','file_path':file_path})
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
+        
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_url'] = 'home_app:plano'
+        return context
 
 
-class ActualizacionPage(LoginRequiredMixin, TemplateView):
+class ActualizacionPage(LoginRequiredMixin, BaseView):
     template_name = "home/actualizacion.html"
+    StaticPage.template_name = template_name
     login_url = reverse_lazy('users_app:user-login')
 
     @method_decorator(registrar_auditoria)
     @method_decorator(permission_required('permisos.actualizar_base', raise_exception=True))
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            # print(request.user.get_all_permissions())  # Imprime los permisos del usuario
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            return redirect('users_app:user-login')
+        return super().dispatch(request, *args, **kwargs)
         
     def post(self, request, *args, **kwargs):
-        database_name = request.POST.get('database_select')
+        database_name = request.POST.get('database_name')
         if not database_name:
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
-        if not database_name:
-            return JsonResponse({'success': False, 'error_message': 'Debe seleccionar una base de datos.'})
         try:
             # Instanciamos la clase Extrae_Bi con el nombre de la base de datos como argumento
             extrae_bi = Extrae_Bi(database_name)
@@ -208,8 +218,16 @@ class ActualizacionPage(LoginRequiredMixin, TemplateView):
             return JsonResponse({'success': True, 'error_message': ''})
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
+        
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
     
-class PruebaPage(LoginRequiredMixin, TemplateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_url'] = 'home_app:actualizacion'
+        return context
+    
+class PruebaPage(LoginRequiredMixin, BaseView):
     template_name = "home/prueba.html"
     login_url = reverse_lazy('users_app:user-login')
     
@@ -221,3 +239,11 @@ class PruebaPage(LoginRequiredMixin, TemplateView):
         request.session['database_name'] = database_name
         if not database_name:
             return JsonResponse({'success': False, 'error_message': 'Debe seleccionar una base de datos.'})
+        
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_url'] = 'home_app:prueba'
+        return context
