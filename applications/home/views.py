@@ -137,6 +137,7 @@ class InterfacePage(LoginRequiredMixin, BaseView):
             file_name = StaticPage.archivo_plano
             request.session['file_path'] = file_path
             request.session['file_name'] = file_name
+            print(4)
             return JsonResponse({'success': True, 'error_message': '','file_path':file_path})
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
@@ -203,7 +204,7 @@ class ActualizacionPage(LoginRequiredMixin, BaseView):
         return super().dispatch(request, *args, **kwargs)
         
     def post(self, request, *args, **kwargs):
-        database_name = request.POST.get('database_name')
+        database_name = request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 

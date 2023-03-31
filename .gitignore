@@ -135,3 +135,5 @@ staticfiles/
 Dockerfile
 docker-compose.yml
 __pycache__/
+rsa_key
+rsa_key.pub
