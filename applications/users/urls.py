@@ -12,7 +12,8 @@ urlpatterns = [
         views.LoginUser.as_view(),
         name='user-login',
     ),
-    path('', lambda request: redirect('login/')),
+    # path('', lambda request: redirect('login/')),
+    path('', views.home, name='home'),
     path(
         'logout/', 
         views.LogoutView.as_view(),

@@ -71,3 +71,28 @@ class Api_PowerBi:
         else:
             print(response.reason)
             print(response.json())
+            
+    def get_report_id(self):
+        report_id= StaticPage.report_id_powerbi
+        return report_id
+
+    def generate_embed_token(self, report_id):
+        access_id = self.request_access_token_refresh()
+
+        # Reemplaza con el ID del grupo de trabajo en Power BI donde se encuentra el informe
+        workspace_id = get_secret("GROUP_ID")
+
+        endpoint = f'https://api.powerbi.com/v1.0/myorg/groups/{workspace_id}/reports/{report_id}/GenerateToken'
+        headers = {
+            'Authorization': f'Bearer ' + access_id,
+            'Content-Type': 'application/json'
+        }
+        payload = {
+            "accessLevel": "View"
+        }
+        response = requests.post(endpoint, headers=headers, json=payload)
+
+        if response.status_code == 200:
+            return response.json()["token"]
+        else:
+            raise Exception("No se pudo generar el token de incrustación.")

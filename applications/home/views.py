@@ -37,10 +37,18 @@ class HomePage(LoginRequiredMixin, BaseView):
     
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
+        StaticPage.name = request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
+        
+        database_name = request.POST.get('database_select')
+        if not database_name:
+            return JsonResponse({"success": False, "error_message": "La base de datos no está seleccionada"})
+
+        request.session['database_name'] = database_name
+        
         
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)

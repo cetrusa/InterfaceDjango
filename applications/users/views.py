@@ -169,3 +169,6 @@ def database_list(request):
     databases = request.user.conf_empresas.all().order_by('nmEmpresa')
     database_list = [{'database_name': database.name, 'database_nmEmpresa': database.nmEmpresa} for database in databases]
     return JsonResponse({'database_list': database_list})
+
+def home(request):
+    return render(request, 'index.html')

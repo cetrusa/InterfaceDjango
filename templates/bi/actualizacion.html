@@ -5,7 +5,7 @@
 Actuliazación
 {% endblock title %}
 
-{% block content %}
+{% block window %}
 <br>
 <br>
   <div class="card" style="width: 25rem;">
@@ -42,7 +42,7 @@ Actuliazación
   </div>
 </div>
 <!-- final del modal -->
-{% endblock content %}
+{% endblock window %}
 
 {% block script %}
 <script>
@@ -55,7 +55,7 @@ Actuliazación
   // Realiza la solicitud AJAX al servidor
   var xhr = new XMLHttpRequest();
   xhr.responseType = "text";
-  xhr.open("POST", "{% url 'bi_app:actualizacion_bi' %}", true);
+  xhr.open("POST", "{% url form_url %}", true);
   xhr.setRequestHeader("X-CSRFToken", csrf_token);
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.onreadystatechange = function () {

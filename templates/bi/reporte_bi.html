@@ -29,7 +29,7 @@
 Reporte de Bi
 {% endblock title %}
 
-{% block content %}
+{% block window %}
 <div class="container">
   <div class="row">
       <div class="col-12">
@@ -39,32 +39,10 @@ Reporte de Bi
       </div>
   </div>
 </div>
-{% endblock content %}
+{% endblock window %}
 
 {% block script %}
 <script>
-    function fetchData() {
-      // Realiza la solicitud AJAX al servidor
-      var csrf_token = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = "text";
-      xhr.open("POST", "{% url 'bi_app:reporte_bi' %}", true);
-      xhr.setRequestHeader("X-CSRFToken", csrf_token);
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhr.onreadystatechange = function () {
-        if (this.readyState === XMLHttpRequest.DONE) {
-          handleServerResponse(this.status, this.responseText);
-        }
-      };
-      var database = window.sessionStorage.getItem("database_name");
-      xhr.send("database_select=" + encodeURIComponent(database));
-    }
-  
-    // Verifica si la página se carga con un valor de base de datos almacenado en sessionStorage
-    if (window.sessionStorage.getItem("database_name")) {
-      fetchData();
-    }
-  
     function handleServerResponse(status, responseText) {
       if (status === 200) {
         // Parsea la respuesta JSON

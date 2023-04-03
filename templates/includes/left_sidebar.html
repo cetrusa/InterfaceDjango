@@ -23,14 +23,14 @@
     {% if perms.permisos.plano %}
     <a href="{% url 'home_app:plano'%}"><i class="fas fa-table"></i><span>Archivos Planos</span></a>
     {% endif %}
-    {% if perms.permisos.informe_bi %}
+    <!-- {% if perms.permisos.informe_bi %}
     <a href="{% url 'bi_app:reporte_bi' %}"><i class="fas fa-tv"></i><span>Reportes Bi</span></a>
-    {% endif %}
+    {% endif %} -->
     {% if perms.permisos.actualizar_base %}
     <a href="{% url 'home_app:actualizacion'%}"><i class="fas fa-th"></i><span>Actualización Datos</span></a>
     {% endif %}
-    {% if perms.permisos.actualizacion_bi %}
-    <a href="{% url 'bi_app:actualizacion_bi' %}"><i class="fas fa-tv"></i><span>Actualización PowerBi</span></a>
+    {% if perms.permisos.reporte_bi %}
+    <a href="{% url 'bi_app:reporte_embed2' %}"><i class="fas fa-tv"></i><span>Bi Sidis</span></a>
     {% endif %}
     {% if perms.permisos.admin %}
     <a href="{% url 'admin:index' %}"><i class="fas fa-sliders-h"></i><span>Configuración</span></a>
