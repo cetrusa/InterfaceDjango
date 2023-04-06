@@ -13,7 +13,9 @@
     <h4>{{ user.get_full_name }}</h4>
   </center>
   <nav>
-    
+    {% if perms.permisos.informe_bi %}
+    <a href="{% url 'bi_app:reporte_embed' %}"><i class="fas fa-tv"></i><span>Bi Sidis</span></a>
+    {% endif %}
     {% if perms.permisos.cubo %}
     <a href="{% url 'home_app:cubo'%}"><i class="fas fa-cube"></i><span>Cubo de Ventas</span></a>
     {% endif %}
@@ -28,9 +30,6 @@
     {% endif %} -->
     {% if perms.permisos.actualizar_base %}
     <a href="{% url 'home_app:actualizacion'%}"><i class="fas fa-th"></i><span>Actualización Datos</span></a>
-    {% endif %}
-    {% if perms.permisos.reporte_bi %}
-    <a href="{% url 'bi_app:reporte_embed2' %}"><i class="fas fa-tv"></i><span>Bi Sidis</span></a>
     {% endif %}
     {% if perms.permisos.admin %}
     <a href="{% url 'admin:index' %}"><i class="fas fa-sliders-h"></i><span>Configuración</span></a>

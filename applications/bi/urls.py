@@ -21,8 +21,7 @@ urlpatterns = [
         views.IncrustarBiPage.as_view(),
         name='reporte_embed',
     ),
-    path('embed_info/', views.EmbedInfoView.as_view(), name='embed_info'),
-    path('reporte_embed2/', views.reporte_embed, name='reporte_embed2'),
+    # path('reporte_embed2/', views.reporte_embed, name='reporte_embed2'),
     path('eliminar_reporte_fetched/', views.EliminarReporteFetched.as_view(), name='eliminar_reporte_fetched'),
     path('actualizar_database_name/', views.actualizar_database_name, name='actualizar_database_name'),
 ]
