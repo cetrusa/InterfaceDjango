@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 # from applications.users.decorators import registrar_auditoria
 from django.http import HttpResponseRedirect
 from django.http import JsonResponse
+from scripts.StaticPage import StaticPage
 
 
 from django.views.generic import (
@@ -150,10 +151,20 @@ class BaseView(TemplateView):
         databases = self.request.user.conf_empresas.all().order_by('nmEmpresa')
         database_list = [{'name': database.name, 'nmEmpresa': database.nmEmpresa} for database in databases]
         sorted_database_list = sorted(database_list, key=lambda x: x['nmEmpresa'])
-        database_name = self.request.session.get('database_select', None)
+        database_name = self.request.session.get('database_name') or self.request.POST.get('database_select')
         context['database_list'] = sorted_database_list
         context['database_name'] = database_name
         return context
+    
+    def post(self, request, *args, **kwargs):
+        database_name = request.POST.get('database_select')
+        print(f"Received database_name: {database_name}")
+        if database_name:
+            request.session['database_name'] = database_name
+            return JsonResponse({'status': 'success', 'message': 'Database name updated in session.'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Invalid database name provided.'}, status=400)
+
 
 
 class DatabaseListView(ListView):

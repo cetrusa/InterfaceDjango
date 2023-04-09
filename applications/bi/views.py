@@ -37,12 +37,6 @@ with open("secret.json") as f:
             raise ImproperlyConfigured(msg)
         
 
-@login_required(login_url='/login/')
-def actualizar_database_name(request):
-    database_name = request.POST.get('database_select')
-    request.session['database_name'] = database_name
-    return JsonResponse({'success': True})
-
 class EliminarReporteFetched(View):
     def post(self, request, *args, **kwargs):
         if 'report_fetched' in request.session:
@@ -62,11 +56,13 @@ class ActualizacionBiPage(LoginRequiredMixin, BaseView):
         return super().dispatch(request, *args, **kwargs)
                 
     def post(self, request, *args, **kwargs):
+        
         database_name = request.session.get('database_name') or request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
+        StaticPage.name = database_name
         try:
             # Instanciamos la clase Extrae_Bi con el nombre de la base de datos como argumento
             ApiPBi = Api_PowerBi(database_name)
@@ -84,98 +80,199 @@ class ActualizacionBiPage(LoginRequiredMixin, BaseView):
         context['form_url'] = 'bi_app:actualizacion_bi'
         return context
 
-class IncrustarBiPage(LoginRequiredMixin, BaseView):
-    template_name = "bi/reporte_embedv2.html"
-    StaticPage.template_name = template_name
-    login_url = reverse_lazy('users_app:user-login')
-
-    @method_decorator(registrar_auditoria)
-    @method_decorator(permission_required('permisos.informe_bi', raise_exception=True))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        # Utiliza la función get_embed_token_report() del módulo powerbi.py para obtener la información necesaria
-        # para incrustar el informe de Power BI
-        database_name = StaticPage.name
-        ConfigBasic(database_name)
-        clase = PbiEmbedService()
-        embed_info_json = clase.get_embed_params_for_single_report(workspace_id=get_secret("GROUP_ID"), report_id=f"{StaticPage.report_id_powerbi}")
-        embed_info = json.loads(embed_info_json)
-
-        # Imprime la información de embed_info para depurar
-        print("embed_info:", embed_info)
-        # Verifica si se ha producido algún error al obtener la información de incrustación
-        if 'error' in embed_info:
-            context = {'error_message': embed_info['error']}
-        else:
-            context = {
-                'EMBED_URL': embed_info['reportConfig'][0]['embedUrl'],
-                'EMBED_ACCESS_TOKEN': embed_info['accessToken'],
-                'REPORT_ID': embed_info['reportConfig'][0]['reportId'],
-                'TOKEN_TYPE': 1,  # Establece en 1 para utilizar el token de incrustación
-                'TOKEN_EXPIRY': embed_info['tokenExpiry'],  # Agrega tokenExpiry al contexto
-                'form_url': 'bi_app:reporte_embed2'  # Agrega form_url al contexto
-                }
-
-        return render(request, 'bi/reporte_embedv2.html', context)
-
-# def reporte_embed(request):
-#     # Utiliza la función get_embed_token_report() del módulo powerbi.py para obtener la información necesaria
-#     # para incrustar el informe de Power BI
-#     database_name = StaticPage.name
-#     ConfigBasic(database_name)
-#     clase = PbiEmbedService()
-#     embed_info_json = clase.get_embed_params_for_single_report(workspace_id=get_secret("GROUP_ID"), report_id=f"{StaticPage.report_id_powerbi}")
-#     embed_info = json.loads(embed_info_json)
+# class IncrustarBiPage(LoginRequiredMixin, BaseView):
     
-#     # Imprime la información de embed_info para depurar
-#     print("embed_info:", embed_info)
-#     # Verifica si se ha producido algún error al obtener la información de incrustación
-#     if 'error' in embed_info:
-#         context = {'error_message': embed_info['error']}
-#     else:
-#         context = {
-#             'EMBED_URL': embed_info['reportConfig'][0]['embedUrl'],
-#             'EMBED_ACCESS_TOKEN': embed_info['accessToken'],
-#             'REPORT_ID': embed_info['reportConfig'][0]['reportId'],
-#             'TOKEN_TYPE': 1,  # Establece en 1 para utilizar el token de incrustación
-#             'TOKEN_EXPIRY': embed_info['tokenExpiry'],  # Agrega tokenExpiry al contexto
-#             'form_url': 'bi_app:reporte_embed2'  # Agrega form_url al contexto
-#             }
-
-#     return render(request, 'bi/reporte_embedv2.html', context)
-
-class EmbedReportPage(LoginRequiredMixin, BaseView):
-    template_name = "bi/reporte_bi.html"
-    StaticPage.template_name = template_name
-    login_url = reverse_lazy('users_app:user-login')
-    
-    @method_decorator(registrar_auditoria)
-    @method_decorator(permission_required('permisos.informe_bi', raise_exception=True))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        database_name = request.POST.get('database_select')
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
         
+#     template_name = "bi/reporte_embed.html"
+#     StaticPage.template_name = template_name
+#     login_url = reverse_lazy('users_app:user-login')
+    
+#     @method_decorator(registrar_auditoria)
+#     @method_decorator(permission_required('permisos.actualizacion_bi', raise_exception=True))
+#     def dispatch(self, request, *args, **kwargs):
+#         print("Llamando a la función dispatch en IncrustarBiPage")
+#         return super().dispatch(request, *args, **kwargs)
+    
+#     def post(self, request, *args, **kwargs):
+#         database_name = request.POST.get('database_select')
+#         if not database_name:
+#             return redirect('home_app:panel')
+
+#         request.session['database_name'] = database_name
+#         embed_info_response = self.get_embed_info(request)
+#         if embed_info_response['success']:
+#             context = self.get_context_data(**kwargs)
+#             context['EMBED_ACCESS_TOKEN'] = embed_info_response['embed_token']
+#             context['EMBED_URL'] = embed_info_response['embed_url']
+#             context['REPORT_ID'] = embed_info_response['report_id']
+#             context['TOKEN_TYPE'] = 'AadToken'
+#             return self.render_to_response(context)
+#         else:
+#             error_message = embed_info_response['error_message']
+#             context = self.get_context_data(**kwargs)
+#             context['error_message'] = error_message
+#             return self.render_to_response(context)
+        
+#     def get(self, request, *args, **kwargs):
+#         return super().get(request, *args, **kwargs)
+    
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['form_url'] = 'bi_app:reporte_embed'
+#         return context
+
+# class IncrustarBiPage(LoginRequiredMixin, BaseView):
+#     login_url = reverse_lazy('users_app:user-login')
+    
+#     @method_decorator(permission_required('permisos.actualizacion_bi', raise_exception=True))
+#     def dispatch(self, request, *args, **kwargs):
+#         print("Llamando a la función dispatch en EmbedInfoView")
+#         return super().dispatch(request, *args, **kwargs)
+
+#     def get(self, request, *args, **kwargs):
+#         database_name = request.session.get('database_name') or request.POST.get('database_select')
+#         if not database_name:
+#             return JsonResponse({"success": False, "error_message": "La base de datos no está seleccionada"})
+        
+#         request.session['database_name'] = database_name
+    
+#         try:
+#             api_powerbi = Api_PowerBi(database_name)
+#             print(api_powerbi)
+#             report_id = api_powerbi.get_report_id()
+#             print(report_id)
+#             embed_token = api_powerbi.generate_embed_token(report_id)
+#             print(embed_token)
+
+#             # Reemplaza con el ID del grupo de trabajo en Power BI donde se encuentra el informe
+#             workspace_id = get_secret("GROUP_ID")
+#             print(workspace_id)
+
+#             embed_url = f"https://app.powerbi.com/reportEmbed?reportId={report_id}&groupId={workspace_id}"
+#             print(embed_url)
+#             return JsonResponse({"success": True, "embed_url": embed_url, "embed_token": embed_token})
+#         except Exception as e:
+#             return JsonResponse({"success": False, "error_message": str(e)})
+
+
+def reporte_embed(request):
+    # Utiliza la función get_embed_token_report() del módulo powerbi.py para obtener la información necesaria
+    # para incrustar el informe de Power BI
+    database_name = StaticPage.name
+    ConfigBasic(database_name)
+    clase = PbiEmbedService()
+    embed_info_json = clase.get_embed_params_for_single_report(workspace_id=get_secret("GROUP_ID"), report_id=f"{StaticPage.report_id_powerbi}")
+    embed_info = json.loads(embed_info_json)
+    
+    # Imprime la información de embed_info para depurar
+    print("embed_info:", embed_info)
+    # Verifica si se ha producido algún error al obtener la información de incrustación
+    if 'error' in embed_info:
+        context = {'error_message': embed_info['error']}
+    else:
+        context = {
+            'EMBED_URL': embed_info['reportConfig'][0]['embedUrl'],
+            'EMBED_ACCESS_TOKEN': embed_info['accessToken'],
+            'REPORT_ID': embed_info['reportConfig'][0]['reportId'],
+            'TOKEN_TYPE': 1,  # Establece en 1 para utilizar el token de incrustación
+            'TOKEN_EXPIRY': embed_info['tokenExpiry'],  # Agrega tokenExpiry al contexto
+            'form_url': 'bi_app:reporte_embed2'  # Agrega form_url al contexto
+            }
+
+    return render(request, 'bi/reporte_embedv2.html', context)
+
+class IncrustarBiPage(LoginRequiredMixin, BaseView):
+    template_name = "bi/reporte_embed.html"
+    StaticPage.template_name = template_name
+    login_url = reverse_lazy('users_app:user-login')
+
+    @method_decorator(registrar_auditoria)
+    @method_decorator(permission_required('permisos.informe_bi', raise_exception=True))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def process_request(self, request):
+        print(request.session.items())
+        database_name = request.session.get('database_name') or request.POST.get('database_select')
+        print(database_name)
         if not database_name:
             return redirect('home_app:panel')
-        
+
         request.session['database_name'] = database_name
+        StaticPage.name = database_name
         try:
-            config = ConfigBasic(database_name)    
-            url_powerbi= config.StaticPage.url_powerbi
-            return JsonResponse({'url_powerbi': url_powerbi})
+            ConfigBasic(database_name)
+            clase = PbiEmbedService()
+            embed_info_json = clase.get_embed_params_for_single_report(workspace_id=get_secret("GROUP_ID"), report_id=f"{StaticPage.report_id_powerbi}")
+            embed_info = json.loads(embed_info_json)
+            if 'error' in embed_info:
+                context = {'error_message': embed_info['error']}
+            else:
+                context = {
+                    'EMBED_URL': embed_info['reportConfig'][0]['embedUrl'],
+                    'EMBED_ACCESS_TOKEN': embed_info['accessToken'],
+                    'REPORT_ID': embed_info['reportConfig'][0]['reportId'],
+                    'TOKEN_TYPE': 1,  # Establece en 1 para utilizar el token de incrustación
+                    'TOKEN_EXPIRY': embed_info['tokenExpiry'],  # Agrega tokenExpiry al contexto
+                    'form_url': 'bi_app:reporte_embed'  # Agrega form_url al contexto
+                }
+
+            return context
         except Exception as e:
-            return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
-        
+            return {'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"}
+
+    def post(self, request, *args, **kwargs):
+        context = self.process_request(request)
+        if 'error_message' in context:
+            context = {'error_message': context['error']}
+        return render(request, self.template_name, context)
+
     def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-    
+        context = self.process_request(request)
+        if 'error_message' in context:
+            context = {'error_message': context['error']}
+        return render(request, self.template_name, context)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_url'] = 'bi_app:reporte_bi'
         return context
-        
 
+
+
+
+
+        
+# esta clase es para embebido normalito de la url publica
+# class EmbedReportPage(LoginRequiredMixin, BaseView):
+#     template_name = "bi/reporte_bi.html"
+#     StaticPage.template_name = template_name
+#     login_url = reverse_lazy('users_app:user-login')
+    
+#     @method_decorator(registrar_auditoria)
+#     @method_decorator(permission_required('permisos.informe_bi', raise_exception=True))
+#     def dispatch(self, request, *args, **kwargs):
+#         return super().dispatch(request, *args, **kwargs)
+
+#     def post(self, request, *args, **kwargs):
+#         database_name = request.POST.get('database_select')
+        
+#         if not database_name:
+#             return redirect('home_app:panel')
+        
+#         request.session['database_name'] = database_name
+#         try:
+#             config = ConfigBasic(database_name)    
+#             url_powerbi= config.StaticPage.url_powerbi
+#             return JsonResponse({'url_powerbi': url_powerbi})
+#         except Exception as e:
+#             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
+        
+#     def get(self, request, *args, **kwargs):
+#         return super().get(request, *args, **kwargs)
+    
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['form_url'] = 'bi_app:reporte_bi'
+#         return context

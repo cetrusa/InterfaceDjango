@@ -4,10 +4,10 @@
 <h1 class="text-align-center">Bienvenido!!!</h1>
 {% if messages %}
 <ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+  {% for message in messages %}
+  <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
     {% endfor %}
-    
+
 </ul>
 {% endif %}
 <img src="{% static 'images/panel.gif' %}" alt="panel" style="width: 100%;">
@@ -17,4 +17,3 @@
 
 {% block script %}
 {% endblock script %}
-    

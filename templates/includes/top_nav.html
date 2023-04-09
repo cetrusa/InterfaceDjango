@@ -6,14 +6,7 @@
     <div class="left-area">
         <h3>Interface <span>Amovil</span></h3>
     </div>
-    <form class="right" action="{% url form_url %}" method="post" id="myForm">
-        {% csrf_token %}
-        <div class="form-group">
-            <select name="database_select" required class="text-control text-uppercase" id="database_select">
-                <option disabled selected>Seleccione una empresa</option>
-            </select></li>
-        </div>
-    </form>
+    {% include 'includes/database_selector.html' %}
     <div class="right-area">
         {% if user.is_authenticated %}
         <a href="{% url 'users_app:user-logout' %}" class="logout-btn">Logout <i class="fas fa-sign-out-alt"></i></a>

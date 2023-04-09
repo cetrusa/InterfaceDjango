@@ -6,17 +6,17 @@ import geocoder
 from scripts.StaticPage import StaticPage
 
 def grabar_auditoria(request, detalle):
-    # Obtenemos los datos de la petición
-    gc = geocoder.ip("me")
+    ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', None))
+    gc = geocoder.ip(ip)
+    
     usuario = request.user
-    ip = gc.ip
     transaccion = request.path_info
     database_name = StaticPage.name
     city = gc.city
 
-    # Creamos una instancia del modelo RegistroAuditoria con los datos obtenidos
     registro = RegistroAuditoria(usuario=usuario, ip=ip, transaccion=transaccion, detalle=detalle, database_name=database_name, city=city)
     registro.save()
+
 
 def registrar_auditoria(view_func):
     @wraps(view_func)

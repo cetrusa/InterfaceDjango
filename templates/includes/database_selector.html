@@ -1,12 +1,17 @@
 <!-- Selector de bases de datos -->
-<select class="form-control" id="database_select">
-    {% for database_name,database_nmEmpresa in databases_list %}
-    <option value="{{ database_name }}">{{ database_nmEmpresa }} </option>
-    {% endfor %}
-</select>
-
+<form class="right" action="{% url form_url %}" method="post" id="myForm">
+    {% csrf_token %}
+    <div class="form-group">
+        <select class="form-control" id="database_select" name="database_select">
+            {% for database_name,database_nmEmpresa in databases_list %}
+            <option value="{{ database_name }}">{{ database_nmEmpresa }} </option>
+            {% endfor %}
+        </select>
+    </div>
+</form>
 <!-- Código JavaScript relacionado con el selector de bases de datos -->
 <script>
+    var database = null;
     $(document).ready(function () {
         $.get('{% url "users_app:database_list" %}', function (data) {
             var databaseSelect = $('#database_select');
@@ -14,10 +19,13 @@
                 databaseSelect.append('<option value="' + database.database_name + '">' + database.database_nmEmpresa + '</option>');
             });
 
-            var databaseName = window.sessionStorage.getItem("database_name");
+            var database = window.sessionStorage.getItem("database_name");
 
-            if (databaseName) {
-                document.getElementById("database_select").value = databaseName;
+            if (database) {
+                updateDatabaseName(database);
+                document.getElementById("database_select").value = database;
+
+
             }
         });
 
@@ -29,7 +37,8 @@
         });
     });
 
-    function updateDatabaseName(database) {
+    function updateDatabaseName(newDatabase) {
+        console.log("Updating database name:", newDatabase);
         var csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "{% url form_url %}", true);
@@ -38,13 +47,14 @@
         xhr.onreadystatechange = function () {
             if (this.readyState === XMLHttpRequest.DONE) {
                 if (this.status === 200) {
-                    // Si la respuesta del servidor es exitosa, recarga la página
-                    location.reload();
+                    console.log("Database name updated successfully:", newDatabase);
+                    database = newDatabase;
                 } else {
                     console.log("Error al actualizar el valor de database_name en la sesión:", this.status, this.responseText);
                 }
             }
         };
-        xhr.send("database_select=" + encodeURIComponent(database));
+        xhr.send("database_select=" + encodeURIComponent(newDatabase));
     }
+
 </script>

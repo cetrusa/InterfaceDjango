@@ -1,9 +1,9 @@
 {% load static %}
 
 {% if perms.permisos.nav_bar %}
-  
 
-  
+
+
 <div class="sidebar">
   <center>
     <span class="card" style="height: 100px; width: 100%;background: #4C6AB5;">
@@ -25,9 +25,6 @@
     {% if perms.permisos.plano %}
     <a href="{% url 'home_app:plano'%}"><i class="fas fa-table"></i><span>Archivos Planos</span></a>
     {% endif %}
-    <!-- {% if perms.permisos.informe_bi %}
-    <a href="{% url 'bi_app:reporte_bi' %}"><i class="fas fa-tv"></i><span>Reportes Bi</span></a>
-    {% endif %} -->
     {% if perms.permisos.actualizar_base %}
     <a href="{% url 'home_app:actualizacion'%}"><i class="fas fa-th"></i><span>Actualización Datos</span></a>
     {% endif %}
@@ -35,15 +32,15 @@
     <a href="{% url 'admin:index' %}"><i class="fas fa-sliders-h"></i><span>Configuración</span></a>
     {% endif %}
 
-      
-    
-    
-    
 
-    
-    
-    
-    
+
+
+
+
+
+
+
+
   </nav>
 </div>
 {% endif %}

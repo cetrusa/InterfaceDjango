@@ -5,119 +5,116 @@
 <script src="https://microsoft.github.io/PowerBI-JavaScript/demo/node_modules/powerbi-client/dist/powerbi.js"></script>
 {% endblock style %}
 
-{% block title %}Power BI Embedded sample{% endblock title %}
+{% block title %}Bi Sidis{% endblock title %}
 
 {% block window %}
-<div id="reportContainer"></div>
+<button id="loadReportBtn" class="btn btn-primary">Cargar informe</button>
+<div id="reportContainer" style="height: 100vh;"></div>
 
 {% if error_message %}
 <p>{{ error_message }}</p>
 {% else %}
 <script type="text/javascript">
+$(function () {
+    var reportContainer = $("#reportContainer").get(0);
 
+    // Initialize iframe for embedding report
+    powerbi.bootstrap(reportContainer, { type: "report" });
 
-  let loadedResolve, reportLoaded = new Promise((res, rej) => { loadedResolve = res; });
-  let renderedResolve, reportRendered = new Promise((res, rej) => { renderedResolve = res; });
+    var models = window["powerbi-client"].models;
+    var reportLoadConfig = {
+        type: "report",
+        tokenType: models.TokenType.Embed,
 
-  // Get models. models contains enums that can be used.
-  models = window['powerbi-client'].models;
-
-  // Embed a Power BI report in the given HTML element with the given configurations
-  // Read more about how to embed a Power BI report in your application here: https://go.microsoft.com/fwlink/?linkid=2153590
-  function embedPowerBIReport() {
-    /*-----------------------------------------------------------------------------------+
-    |    Don't change these values here: access token, embed URL and report ID.          | 
-    |    To make changes to these values:                                                | 
-    |    1. Save any other code changes to a text editor, as these will be lost.         |
-    |    2. Select 'Start over' from the ribbon.                                         |
-    |    3. Select a report or use an embed token.                                       |
-    +-----------------------------------------------------------------------------------*/
-    // Read embed application token
-    let accessToken = "{{ EMBED_ACCESS_TOKEN }}";
-
-    // Read embed URL
-    let embedUrl = "{{ EMBED_URL }}";
-
-    // Read report Id
-    let embedReportId = "{{ REPORT_ID }}";
-
-    // Read embed type from radio
-    let tokenType = "{{ TOKEN_TYPE }}";
-
-    // We give All permissions to demonstrate switching between View and Edit mode and saving report.
-    let permissions = models.Permissions.All;
-
-    // Create the embed configuration object for the report
-    // For more information see https://go.microsoft.com/fwlink/?linkid=2153590
-    let config = {
-      type: 'report',
-      tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
-      accessToken: accessToken,
-      embedUrl: embedUrl,
-      id: embedReportId,
-      permissions: permissions,
-      settings: {
-        panes: {
-          filters: {
-            visible: true
-          },
-          pageNavigation: {
-            visible: true
-          }
-        }
-      }
+        // Enable this setting to remove gray shoulders from embedded report
+        // settings: {
+        //     background: models.BackgroundType.Transparent
+        // }
     };
 
-    // Get a reference to the embedded report HTML element
-    let embedContainer = $('#embedContainer')[0];
+    // Obtén la información de incrustación del contexto de la plantilla de Django
+    let embedData = {
+        accessToken: "{{ EMBED_ACCESS_TOKEN }}",
+        reportConfig: [{
+            embedUrl: "{{ EMBED_URL }}",
+            reportId: "{{ REPORT_ID }}"
+        }],
+        tokenExpiry: "{{ TOKEN_EXPIRY }}"
+    };
 
-    // Embed the report and display it within the div container.
-    report = powerbi.embed(embedContainer, config);
+    reportLoadConfig.accessToken = embedData.accessToken;
+    reportLoadConfig.embedUrl = embedData.reportConfig[0].embedUrl;
 
-    // report.off removes all event handlers for a specific event
-    report.off("loaded");
+    // Use the token expiry to regenerate Embed token for seamless end user experience
+    // Refer https://aka.ms/RefreshEmbedToken
+    tokenExpiry = embedData.tokenExpiry;
 
-    // report.on will add an event handler
+    // Embed Power BI report when Access token and Embed URL are available
+    var report = powerbi.embed(reportContainer, reportLoadConfig);
+
+    // Triggers when a report schema is successfully loaded
     report.on("loaded", function () {
-      loadedResolve();
-      report.off("loaded");
+        console.log("Report load successful")
     });
 
-    // report.off removes all event handlers for a specific event
+    // Triggers when a report is successfully embedded in UI
+    report.on("rendered", function () {
+        console.log("Report render successful")
+    });
+
+    // Clear any other error handler event
     report.off("error");
 
+    // Below patch of code is for handling errors that occur during embedding
     report.on("error", function (event) {
-      console.log(event.detail);
+        var errorMsg = event.detail;
+
+        // Use errorMsg variable to log error in any destination of choice
+        console.error(errorMsg);
+        return;
     });
-
-    // report.off removes all event handlers for a specific event
-    report.off("rendered");
-
-    // report.on will add an event handler
-    report.on("rendered", function () {
-      renderedResolve();
-      report.off("rendered");
-    });
-  }
-
-  embedPowerBIReport();
-  (async () => {
-    await reportLoaded();
-  })();
-
-  // Insert here the code you want to run after the report is loaded
-
-  (async () => {
-    await reportLoaded();
-  })();
-
-// Insert here the code you want to run after the report is rendered
-
+});
 
 </script>
 {% endif %}
 {% endblock window %}
 
 {% block script %}
+<script>
+    $(document).ready(function () {
+        var databaseName = window.sessionStorage.getItem("database_name");
+
+        if (!databaseName) {
+            console.error("No se encontró información de la base de datos en sessionStorage.");
+        } else {
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = "json";
+            xhr.open("POST", "{% url form_url %}", true);
+            xhr.setRequestHeader("X-CSRFToken", "{% csrf_token %}");
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (this.readyState === XMLHttpRequest.DONE) {
+                    console.log(this.status, this.responseText);
+                    handleServerResponse(this.status, this.response);
+                }
+            };
+
+            xhr.send("database_select=" + encodeURIComponent(databaseName));
+        }
+    });
+
+    function handleServerResponse(status, response) {
+        if (status === 200) {
+            // Aquí puedes manejar la respuesta del servidor
+            // y realizar acciones según sea necesario.
+        } else if (status === 400) {
+            // Maneja el error en la respuesta del servidor
+            console.error("Error en la solicitud POST:", status, response.error_message);
+        } else {
+            // Maneja otros errores HTTP
+            console.error("Error en la solicitud POST:", status, response);
+        }
+    }
+</script>
 
 {% endblock script %}

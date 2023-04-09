@@ -37,19 +37,13 @@ class HomePage(LoginRequiredMixin, BaseView):
     
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
-        StaticPage.name = request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
         
-        database_name = request.POST.get('database_select')
-        if not database_name:
-            return JsonResponse({"success": False, "error_message": "La base de datos no está seleccionada"})
-
-        request.session['database_name'] = database_name
-        
-        
+        return redirect('home_app:panel')
+    
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
     
@@ -65,6 +59,8 @@ class DownloadFileView(View):
     def get(self, request):
         file_path = request.session.get('file_path')
         file_name = request.session.get('file_name')
+        
+        
         response = FileResponse(open(file_path, 'rb'))
         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
         return response
@@ -94,12 +90,16 @@ class CuboPage(LoginRequiredMixin, BaseView):
     
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
+        print(request.session.items())
+        # database_name = request.session.get('database_name') or request.POST.get('database_select')
+        print(database_name)
         if not database_name:
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
         IdtReporteIni = request.POST.get('IdtReporteIni')
         IdtReporteFin = request.POST.get('IdtReporteFin')
+        StaticPage.name = database_name
         try:
             cubo_ventas = Cubo_Ventas(database_name, IdtReporteIni, IdtReporteFin)
             cubo_ventas.Procedimiento_a_Excel()
@@ -130,13 +130,14 @@ class InterfacePage(LoginRequiredMixin, BaseView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        database_name = request.POST.get('database_select')
+        database_name = request.session.get('database_name') or request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
         IdtReporteIni = request.POST.get('IdtReporteIni')
         IdtReporteFin = request.POST.get('IdtReporteFin')
+        StaticPage.name = database_name
         try:
             # Instanciamos la clase Interface_Contable con el nombre de la base de datos como argumento
             interface_contable = Interface_Contable(database_name, IdtReporteIni, IdtReporteFin)
@@ -170,7 +171,7 @@ class PlanoPage(LoginRequiredMixin, BaseView):
         return super().dispatch(request, *args, **kwargs)
         
     def post(self, request, *args, **kwargs):
-        database_name = request.POST.get('database_select')
+        database_name = request.session.get('database_name') or request.POST.get('database_select')
         print(database_name)
         if not database_name:
             return redirect('home_app:panel')
@@ -178,11 +179,11 @@ class PlanoPage(LoginRequiredMixin, BaseView):
         request.session['database_name'] = database_name
         IdtReporteIni = request.POST.get('IdtReporteIni')
         IdtReporteFin = request.POST.get('IdtReporteFin')
+        StaticPage.name = database_name
 
         try:
             # Instanciamos la clase Extrae_Bi con el nombre de la base de datos como argumento
             interface_contable = Interface_Contable(database_name, IdtReporteIni, IdtReporteFin)
-            print('aqui')
             interface_contable.Procedimiento_a_Plano()
             file_path = StaticPage.file_path
             file_name = StaticPage.archivo_plano
@@ -212,11 +213,12 @@ class ActualizacionPage(LoginRequiredMixin, BaseView):
         return super().dispatch(request, *args, **kwargs)
         
     def post(self, request, *args, **kwargs):
-        database_name = request.POST.get('database_select')
+        database_name = request.session.get('database_name') or request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
+        StaticPage.name = database_name
         try:
             # Instanciamos la clase Extrae_Bi con el nombre de la base de datos como argumento
             extrae_bi = Extrae_Bi(database_name)
@@ -241,11 +243,12 @@ class PruebaPage(LoginRequiredMixin, BaseView):
     login_url = reverse_lazy('users_app:user-login')
     
     def post(self, request, *args, **kwargs):
-        database_name = request.POST.get('database_select')
+        database_name = request.session.get('database_name') or request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
+        StaticPage.name = database_name
         if not database_name:
             return JsonResponse({'success': False, 'error_message': 'Debe seleccionar una base de datos.'})
         

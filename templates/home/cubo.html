@@ -75,7 +75,7 @@ Cubo de Ventas
     // Realiza la solicitud AJAX al servidor
     var xhr = new XMLHttpRequest();
     xhr.responseType = "text";
-    xhr.open("POST", "{% url 'home_app:cubo' %}", true);
+    xhr.open("POST", "{% url form_url %}", true);
     xhr.setRequestHeader("X-CSRFToken", csrf_token);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function () {
