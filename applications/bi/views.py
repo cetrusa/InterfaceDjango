@@ -150,13 +150,13 @@ class IncrustarBiPage(LoginRequiredMixin, BaseView):
     def post(self, request, *args, **kwargs):
         context = self.process_request(request)
         if 'error_message' in context:
-            context = {'error_message': context['error']}
+            context = {'error_message': context.get('error')}
         return render(request, self.template_name, context)
 
     def get(self, request, *args, **kwargs):
         context = self.process_request(request)
         if 'error_message' in context:
-            context = {'error_message': context['error']}
+            context = {'error_message': context.get('error')}
         return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):
