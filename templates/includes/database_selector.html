@@ -3,6 +3,7 @@
     {% csrf_token %}
     <div class="form-group">
         <select class="form-control" id="database_select" name="database_select">
+            <option disabled selected>Seleccione una empresa</option>
             {% for database_name,database_nmEmpresa in databases_list %}
             <option value="{{ database_name }}">{{ database_nmEmpresa }} </option>
             {% endfor %}
