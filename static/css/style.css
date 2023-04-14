@@ -10,11 +10,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Nunito","Roboto", sans-serif;
+    font-family: "Nunito", "Roboto", sans-serif;
 }
 
 body {
-    font-family: "Nunito","Roboto", sans-serif;
+    font-family: "Nunito", "Roboto", sans-serif;
 }
 
 a {
@@ -82,24 +82,24 @@ header label #hamburguer {
     cursor: pointer;
 }
 
-#check:checked ~ .sidebar {
+#check:checked~.sidebar {
     left: -180px;
 }
 
-#check:checked ~ .sidebar nav span {
+#check:checked~.sidebar nav span {
     display: none;
 }
 
-#check:checked ~ .sidebar nav a {
+#check:checked~.sidebar nav a {
     margin-left: 172px;
     /*font-size: 23px;*/
 }
 
-#check:checked ~ .sidebar center > h4 {
+#check:checked~.sidebar center>h4 {
     visibility: hidden;
 }
 
-#check:checked ~ .content {
+#check:checked~.content {
     margin-left: 70px;
 }
 
@@ -187,7 +187,8 @@ header label #hamburguer {
     overflow-y: auto;
     width: 1200px;
     height: 1080px;
-  }
+}
+
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
@@ -224,20 +225,20 @@ header label #hamburguer {
         left: -250px;
     }
 
-    #check:checked ~ .sidebar {
+    #check:checked~.sidebar {
         left: 0;
     }
 
-    #check:checked ~ .sidebar nav span {
+    #check:checked~.sidebar nav span {
         display: inline-block;
     }
 
-    #check:checked ~ .sidebar nav a {
+    #check:checked~.sidebar nav a {
         margin-left: 0;
         /*font-size: 23px;*/
     }
 
-    #check:checked ~ .sidebar center > h4 {
+    #check:checked~.sidebar center>h4 {
         visibility: initial;
     }
 
@@ -245,27 +246,37 @@ header label #hamburguer {
         margin-left: 0;
     }
 
-    #check:checked ~ .content {
+    #check:checked~.content {
         margin-left: 0;
     }
 
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 50%; /* Move down from the top by 50% of the modal height */
-    transform: translateY(-50%); /* Translate up by 50% of the modal height */
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    align-items: center;
-    justify-content: center;
-}
+    .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1;
+        /* Sit on top */
+        left: 0;
+        top: 50%;
+        /* Move down from the top by 50% of the modal height */
+        transform: translateY(-50%);
+        /* Translate up by 50% of the modal height */
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0);
+        /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4);
+        /* Black w/ opacity */
+        align-items: center;
+        justify-content: center;
+    }
 
-html,
+    html,
     body {
         height: 100%;
         margin: 0;
@@ -289,14 +300,14 @@ html,
     .full-height {
         height: 100%;
     }
-    
+
     .iframe-container {
         position: relative;
         width: 100%;
         height: 100%;
         overflow: hidden;
     }
-    
+
     .responsive-iframe {
         position: absolute;
         top: 0;
@@ -306,19 +317,13 @@ html,
         border: 0;
     }
 
-    @media (max-width: 767px) {
-        .custom-menu {
-          min-height: calc(100vh - 50px); /* Ajusta el valor "50px" según la altura de tu barra superior en dispositivos móviles */
-          overflow-y: scroll;
-        }
-      }
+    body {
+        padding-top: 70px;
+        /* ajusta el valor según el tamaño del menú */
+    }
 
-      body {
-        padding-top: 70px; /* ajusta el valor según el tamaño del menú */
-      }
-
-      @media (max-width: 991px) {
+    @media (max-width: 991px) {
         .navbar-desktop {
-          display: none;
+            display: none;
         }
-      }
+    }

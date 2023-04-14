@@ -6,7 +6,6 @@
     <div class="left-area">
         <h3>Interface <span>Amovil</span></h3>
     </div>
-    {% include 'includes/database_selector.html' %}
     <div class="right-area">
         {% if user.is_authenticated %}
         <a href="{% url 'users_app:user-logout' %}" class="logout-btn">Logout <i class="fas fa-sign-out-alt"></i></a>
