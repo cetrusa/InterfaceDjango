@@ -1,7 +1,7 @@
 <!-- Selector de bases de datos -->
-<form class="right" action="{% url form_url %}" method="post" id="myForm">
+<form class="d-flex ml-auto" action="{% url form_url %}" method="post" id="myForm">
     {% csrf_token %}
-    <div class="form-group">
+    <div class="form-group w-100">
         <select class="form-control" id="database_select" name="database_select">
             <option disabled selected>Seleccione una empresa</option>
             {% for database_name,database_nmEmpresa in databases_list %}

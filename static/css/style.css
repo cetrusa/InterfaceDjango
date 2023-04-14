@@ -181,7 +181,7 @@ header label #hamburguer {
 .contenedorppal {
     margin-left: auto;
     position: fixed;
-    top: 70px;
+    top: 120px;
     transition: margin-left 0.5s;
     max-height: calc(100% - 70px);
     overflow-y: auto;
@@ -326,4 +326,27 @@ header label #hamburguer {
         .navbar-desktop {
             display: none;
         }
+    }
+
+    .database-selector-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background-color: #000;
+    }
+
+    .right-area {
+        padding: 10px 0;
+    }
+
+    .container {
+        padding-top: 50px;
+        /* Ajusta este valor según el tamaño del selector de base de datos */
+    }
+
+    .mobile-navbar {
+        top: 37px;
+        /* Ajusta este valor según el tamaño del selector de base de datos */
     }
