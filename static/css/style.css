@@ -249,28 +249,6 @@ header label #hamburguer {
         margin-left: 0;
     }
 
-    /*
-
-    #check:checked ~ .sidebar {
-        left: 0;
-    }
-
-    #check:checked ~ .sidebar nav span {
-        display: block;
-    }
-
-    #check:checked ~ .sidebar nav i {
-        margin-left: 175px;
-        width: 80px;
-    }
-
-    #check:checked ~ .sidebar center > h4 {
-        visibility: hidden;
-    }
-    */
-}
-
-
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -327,3 +305,20 @@ html,
         height: 100%;
         border: 0;
     }
+
+    @media (max-width: 767px) {
+        .custom-menu {
+          min-height: calc(100vh - 50px); /* Ajusta el valor "50px" según la altura de tu barra superior en dispositivos móviles */
+          overflow-y: scroll;
+        }
+      }
+
+      body {
+        padding-top: 70px; /* ajusta el valor según el tamaño del menú */
+      }
+
+      @media (max-width: 991px) {
+        .navbar-desktop {
+          display: none;
+        }
+      }

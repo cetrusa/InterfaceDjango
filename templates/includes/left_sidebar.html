@@ -1,10 +1,8 @@
 {% load static %}
 
 {% if perms.permisos.nav_bar %}
-
-
-
-<div class="sidebar">
+<!-- Navegación para pantalla grande -->
+<div class="sidebar d-none d-lg-block">
   <center>
     <span class="card" style="height: 100px; width: 100%;background: #4C6AB5;">
       <img src="{% static 'images/Logo-Sidis-Blanco.png' %}" style="display: block;margin:auto ;width: 50%;"
@@ -12,35 +10,6 @@
     </span>
     <h4>{{ user.get_full_name }}</h4>
   </center>
-  <nav>
-    {% if perms.permisos.informe_bi %}
-    <a href="{% url 'bi_app:reporte_embed' %}"><i class="fas fa-tv"></i><span>Bi Sidis</span></a>
-    {% endif %}
-    {% if perms.permisos.cubo %}
-    <a href="{% url 'home_app:cubo'%}"><i class="fas fa-cube"></i><span>Cubo de Ventas</span></a>
-    {% endif %}
-    {% if perms.permisos.interface %}
-    <a href="{% url 'home_app:interface'%}"><i class="fas fa-desktop"></i><span>Int. Contables</span></a>
-    {% endif %}
-    {% if perms.permisos.plano %}
-    <a href="{% url 'home_app:plano'%}"><i class="fas fa-table"></i><span>Archivos Planos</span></a>
-    {% endif %}
-    {% if perms.permisos.actualizar_base %}
-    <a href="{% url 'home_app:actualizacion'%}"><i class="fas fa-th"></i><span>Actualización Datos</span></a>
-    {% endif %}
-    {% if perms.permisos.admin %}
-    <a href="{% url 'admin:index' %}"><i class="fas fa-sliders-h"></i><span>Configuración</span></a>
-    {% endif %}
-
-
-
-
-
-
-
-
-
-
-  </nav>
+  {% include 'includes/menu_items.html' %}
 </div>
 {% endif %}
