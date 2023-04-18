@@ -1,9 +1,9 @@
 from .base import *
 import sys
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['interface.amovil.co','interface.amovil.com.co','127.0.0.1','localhost']
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
