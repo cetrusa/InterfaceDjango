@@ -1,9 +1,11 @@
 from .base import *
 import sys
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['interface.amovil.co','interface.amovil.com.co','127.0.0.1','localhost']
+CSRF_TRUSTED_ORIGINS = ['interface.amovil.com.co']
+CSRF_COOKIE_SECURE = True
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -56,5 +58,6 @@ EMAIL_PORT = 587
 
 sys.path.append(BASE_DIR.child('scripts'))
 sys.path.append(BASE_DIR.child('scritps','extrae_bi'))
+
 
 
