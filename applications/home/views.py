@@ -10,7 +10,7 @@ from django.views.generic import View
 import requests
 from django.utils.decorators import method_decorator
 from applications.users.decorators import registrar_auditoria
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt,csrf_protect
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponseRedirect
@@ -28,13 +28,11 @@ from django.views.generic import (
 )
 from applications.users.views import BaseView
 
-
-    
-    
 class HomePage(LoginRequiredMixin, BaseView):
     template_name = "home/panel.html"
     login_url = reverse_lazy('users_app:user-login')
     
+    @csrf_protect
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
         if not database_name:
