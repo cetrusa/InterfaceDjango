@@ -4,7 +4,7 @@ import sys
 DEBUG = False
 
 ALLOWED_HOSTS = ['interface.amovil.co','interface.amovil.com.co','127.0.0.1','localhost']
-CSRF_TRUSTED_ORIGINS = ['interface.amovil.com.co']
+CSRF_TRUSTED_ORIGINS = ['https://interface.amovil.com.co']
 CSRF_COOKIE_SECURE = True
 
 # Database
