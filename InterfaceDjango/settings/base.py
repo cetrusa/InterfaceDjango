@@ -4,6 +4,8 @@ import pymysql
 import os, random, string
 from unipath import Path
 import datetime
+import pytz
+
 BASE_DIR = Path(__file__).ancestor(3)
 
 pymysql.install_as_MySQLdb()
@@ -120,7 +122,7 @@ AUTH_USER_MODEL = 'users.User'
 
 LANGUAGE_CODE = 'es-co'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
