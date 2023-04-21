@@ -49,10 +49,11 @@ else:
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR.child("static")]
+STATIC_ROOT = BASE_DIR.child("staticfiles")
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR.child("media")
-STATIC_ROOT = BASE_DIR.child("staticfiles")
 
 # EMAIL SETTINGS
 EMAIL_USE_TLS = True
@@ -60,7 +61,6 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = get_secret("EMAIL")
 EMAIL_HOST_PASSWORD = get_secret("PASS_EMAIL")
 EMAIL_PORT = 587
-
 
 sys.path.append(BASE_DIR.child("scripts"))
 sys.path.append(BASE_DIR.child("scritps", "extrae_bi"))
