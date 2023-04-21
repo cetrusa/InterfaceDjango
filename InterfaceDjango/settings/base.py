@@ -4,7 +4,7 @@ import pymysql
 import os, random, string
 from unipath import Path
 import datetime
-import pytz
+# import pytz
 
 BASE_DIR = Path(__file__).ancestor(3)
 
@@ -26,9 +26,7 @@ if not SECRET_KEY:
     SECRET_KEY = ''.join(random.choice( string.ascii_lowercase  ) for i in range( 32 ))
 
 
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 RENDER_EXTERNAL_HOSTNAME = get_secret('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:    
@@ -122,7 +120,7 @@ AUTH_USER_MODEL = 'users.User'
 
 LANGUAGE_CODE = 'es-co'
 
-TIME_ZONE = 'America/Bogota'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
