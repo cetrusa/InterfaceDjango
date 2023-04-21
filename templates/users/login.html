@@ -56,6 +56,9 @@ Login
                         <div>
                             {{ form.captcha }}
                         </div>
+                        <div class="mb-3">
+                            <a href="{% url 'users_app:password_reset' %}">¿Olvidaste tu contraseña?</a>
+                        </div>
                         <button type="submit" class="btn btn-primary">Login</button>
                         <a href="{% url 'users_app:user-register' %}" class="btn btn-secondary">Registrarse</a>
                     </form>
