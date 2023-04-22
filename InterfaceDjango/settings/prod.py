@@ -64,3 +64,5 @@ EMAIL_PORT = 587
 
 sys.path.append(BASE_DIR.child("scripts"))
 sys.path.append(BASE_DIR.child("scritps", "extrae_bi"))
+
+DOMAIN = "interface.amovil.com.co"

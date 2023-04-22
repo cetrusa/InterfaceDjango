@@ -160,3 +160,12 @@ def database_list(request):
 
 def home(request):
     return render(request, 'index.html')
+
+from django.contrib.auth.views import PasswordResetView
+from django.conf import settings
+
+class CustomPasswordResetView(PasswordResetView):
+    def get_email_context(self, **kwargs):
+        context = super().get_email_context(**kwargs)
+        context['domain'] = settings.DOMAIN
+        return context

@@ -2,6 +2,7 @@
 from django.urls import path, reverse_lazy
 from django.shortcuts import redirect
 
+
 from django.contrib.auth.views import (
     PasswordResetView,
     PasswordResetDoneView,
@@ -42,6 +43,15 @@ urlpatterns = [
         views.UserRegisterView.as_view(),
         name="user-register",
     ),
+    # path(
+    #     "password_reset/",
+    #     views.CustomPasswordResetView.as_view(
+    #     template_name="users/password_reset_form.html",
+    #     email_template_name="users/password_reset_email.html",
+    #     success_url=reverse_lazy("users_app:password_reset_done"),
+    # ),
+    # name="password_reset",
+    # ),
     path(
         "password_reset/",
         PasswordResetView.as_view(
