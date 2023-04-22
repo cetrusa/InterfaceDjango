@@ -50,7 +50,7 @@ else:
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR.child("static")]
 STATIC_ROOT = BASE_DIR.child("staticfiles")
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR.child("media")
@@ -64,5 +64,3 @@ EMAIL_PORT = 587
 
 sys.path.append(BASE_DIR.child("scripts"))
 sys.path.append(BASE_DIR.child("scritps", "extrae_bi"))
-
-DOMAIN = "interface.amovil.com.co"
