@@ -2,7 +2,7 @@ from .base import *
 import sys
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "interface.amovil.co",
