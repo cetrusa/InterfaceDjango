@@ -12,7 +12,8 @@ ALLOWED_HOSTS = [
     "0.0.0.0",
     "*",
 ]
-CSRF_TRUSTED_ORIGINS = ["https://interface.amovil.com.co"]
+CSRF_TRUSTED_ORIGINS = ["https://interface.amovil.com.co","http://interfacep.amovil.com.co","*"]
+
 CSRF_COOKIE_SECURE = True
 
 # Database
