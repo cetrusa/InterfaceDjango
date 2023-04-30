@@ -10,3 +10,11 @@
 ```
 docker compose up -d
 ```
+### Correr la imagen en modo produccion
+
+```
+docker container run \
+-d -p 4085:4084 \
+-v static_volume:/code/staticfiles -v media_volume:/code/media \
+cetrusa/interface-django:[VERSION]
+```
