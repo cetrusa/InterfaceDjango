@@ -10,8 +10,20 @@
 ```
 docker compose up -d
 ```
-### Correr la imagen en modo produccion
+# Volúmenes
 
+| Volumenes necesarios | Apuntan a |
+| -- | -- |
+| static_volume | /code/staticfiles |
+| media_volume | /code/media |
+
+
+# Puertos
+| Puertos | Funcion |
+| -- | -- |
+| 4084 | Puerto de salida del servicio |
+
+# Correr el proyecto
 ```
 docker container run \
 -d -p 4085:4084 \
