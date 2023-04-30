@@ -12,6 +12,7 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE
       - DB_HOST
+      
 volumes:
   static_volume: {}
   media_volume: {}

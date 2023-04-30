@@ -1,3 +1,11 @@
-.venv
-.git 
+.git
 .gitignore
+.gitattributes
+Dockerfile
+docker-compose.yml
+rsa_key
+rsa_key.pub
+requirements.old.txt
+README.md
+log.txt
+.idea

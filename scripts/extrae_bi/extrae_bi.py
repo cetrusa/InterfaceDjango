@@ -44,7 +44,7 @@ class Extrae_Bi():
         with StaticPage.conin3.connect() as connectionin:
             cursorbi = connectionin.execution_options(isolation_level="READ COMMITTED")
             resultado_out.to_sql(name=txTabla,con=cursorbi,if_exists='append',index=False, index_label=None)
-            logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+            # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
             return logging.info("los datos se han insertado correctamente")
         
     def consulta_sql_out(self,nmProcedure_out,IdtReporteIni,IdtReporteFin,nmReporte):
