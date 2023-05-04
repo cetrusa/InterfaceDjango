@@ -13,7 +13,5 @@ COPY . .
 
 RUN python manage.py collectstatic --no-input
 
-VOLUME /code/staticfiles
-VOLUME /code/media
 
 CMD ["gunicorn", "--bind", "0.0.0.0:4084", "--timeout", "7200", "InterfaceDjango.wsgi:application"]
