@@ -17,7 +17,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://interface.amovil.com.co",
     "http://interfacep.amovil.com.co",
     "https://interfacep.amovil.com.co",
-    "*",
+    "http://127.0.0.1",
+    "http://localhost",
+    "http://0.0.0.0"
 ]
 
 CSRF_COOKIE_SECURE = True
