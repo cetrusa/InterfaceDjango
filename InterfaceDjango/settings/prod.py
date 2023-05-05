@@ -2,17 +2,26 @@ from .base import *
 import sys
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "interface.amovil.co",
     "interface.amovil.com.co",
+    "interfacep.amovil.com.co",
     "127.0.0.1",
     "localhost",
     "0.0.0.0",
     "*",
 ]
-CSRF_TRUSTED_ORIGINS = ["https://interface.amovil.com.co"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://interface.amovil.com.co",
+    "http://interfacep.amovil.com.co",
+    "https://interfacep.amovil.com.co",
+    "http://127.0.0.1",
+    "http://localhost",
+    "http://0.0.0.0"
+]
+
 CSRF_COOKIE_SECURE = True
 
 # Database
@@ -65,4 +74,4 @@ EMAIL_HOST_PASSWORD = get_secret("PASS_EMAIL")
 EMAIL_PORT = 587
 
 sys.path.append(BASE_DIR.child("scripts"))
-sys.path.append(BASE_DIR.child("scritps", "extrae_bi"))
+sys.path.append(BASE_DIR.child("scripts", "extrae_bi"))
