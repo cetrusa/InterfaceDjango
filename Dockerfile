@@ -7,11 +7,12 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 COPY ./requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install packaging && \
+    pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
 RUN python manage.py collectstatic --no-input
 
 
-CMD ["gunicorn", "--bind", "0.0.0.0:4084", "--timeout", "7200", "InterfaceDjango.wsgi:application"]
+#CMD ["gunicorn", "--bind", "0.0.0.0:4084", "--timeout", "7200", "InterfaceDjango.wsgi:application"]
