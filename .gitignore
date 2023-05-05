@@ -132,7 +132,7 @@ secret.json
 static/images/panel.gif
 log.txt
 staticfiles/
-
+media/
 __pycache__/
 rsa_key
 rsa_key.pub
