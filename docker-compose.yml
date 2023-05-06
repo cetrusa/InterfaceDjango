@@ -2,7 +2,7 @@ version: '3.3'
 services:
   web:
     build: .
-    command: gunicorn --bind 0.0.0.0:4084 --timeout 9999999 InterfaceDjango.wsgi:application
+    command: gunicorn --bind 0.0.0.0:4084 --timeout 999999 InterfaceDjango.wsgi:application
     volumes:
       - .:/code
       - static_volume:/code/staticfiles
@@ -12,7 +12,6 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE
       - DB_HOST
-
 volumes:
   static_volume: {}
   media_volume: {}
