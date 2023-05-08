@@ -13,4 +13,4 @@ RUN pip install packaging && \
 # Copy project
 COPY . .
 RUN python manage.py collectstatic --no-input
-CMD ["gunicorn", "--bind", "0.0.0.0:4084", "InterfaceDjango.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:4085", "InterfaceDjango.wsgi:application"]
