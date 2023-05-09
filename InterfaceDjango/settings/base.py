@@ -28,11 +28,11 @@ if not SECRET_KEY:
     SECRET_KEY = "".join(random.choice(string.ascii_lowercase) for i in range(32))
 
 
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["*"]
 
-RENDER_EXTERNAL_HOSTNAME = get_secret("RENDER_EXTERNAL_HOSTNAME")
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+# RENDER_EXTERNAL_HOSTNAME = get_secret("RENDER_EXTERNAL_HOSTNAME")
+# if RENDER_EXTERNAL_HOSTNAME:
+#     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -57,15 +57,15 @@ LOCAL_APPS = (
 THIRD_PARTY_APPS = ("captcha",)
 
 MIDDLEWARE = [
-    "django.middleware.csrf.CsrfViewMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'InterfaceDjango.middleware.auto_logout.AutoLogoutMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
