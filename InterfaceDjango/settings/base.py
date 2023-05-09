@@ -58,21 +58,21 @@ THIRD_PARTY_APPS = ("captcha",)
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    # "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'InterfaceDjango.middleware.auto_logout.AutoLogoutMiddleware',
+    "InterfaceDjango.middleware.auto_logout.AutoLogoutMiddleware",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 ROOT_URLCONF = "InterfaceDjango.urls"
 
 # Tiempo de inactividad antes de cerrar la sesión automáticamente (en segundos)
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_COOKIE_AGE = 3600  # 3600 segundos son 60 minutos
 
 RECAPTCHA_PUBLIC_KEY = "6LeffTwlAAAAAKYsF2RHBuWmMxSMYLo7DvWb_szY"
