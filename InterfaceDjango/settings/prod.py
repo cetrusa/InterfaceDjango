@@ -2,7 +2,14 @@ from .base import *
 import sys
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "https://interface.amovil.com.co",
+    "http://interfacep.amovil.com.co",
+    "https://interfacep.amovil.com.co",
+    "http://127.0.0.1",
+    "http://localhost",
+    "http://0.0.0.0"
+]
 
 RENDER_EXTERNAL_HOSTNAME = get_secret("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
@@ -70,6 +77,8 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR.child("media")
 
 # EMAIL SETTINGS
+ADMINS = [('Augusto', 'cetrusa@hotmail.com'),]
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = get_secret("EMAIL")
@@ -78,3 +87,20 @@ EMAIL_PORT = 587
 
 sys.path.append(BASE_DIR.child("scripts"))
 sys.path.append(BASE_DIR.child("scripts", "extrae_bi"))
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
+        }
+    },
+    'root': {
+        'handlers': ['mail_admins'],
+        'level': 'ERROR'
+    }
+}

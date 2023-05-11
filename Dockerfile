@@ -1,5 +1,5 @@
 # Pull base image
-FROM python:3.10-alpine3.17
+FROM python:3.10
 # Set environment variables
 ENV PIP_DISABLE_PIP_VERSION_CHECK 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -7,9 +7,7 @@ ENV PYTHONUNBUFFERED 1
 # Set work directory
 WORKDIR /code
 
-RUN apk update \
-    && apk add --no-cache gcc musl-dev python3-dev libffi-dev mysql-dev \
-    && pip install --upgrade pip
+RUN pip install --upgrade pip
 
 # Install dependencies
 COPY ./requirements.txt .
