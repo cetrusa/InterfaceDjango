@@ -24,4 +24,4 @@ urlpatterns = [
     re_path('', include('applications.home.urls')),
     re_path('', include('applications.users.urls')),
     re_path('', include('applications.bi.urls')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)

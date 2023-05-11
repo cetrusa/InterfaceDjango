@@ -1,17 +1,21 @@
 from .base import *
 import sys
 
+
+ALLOWED_HOSTS = []
+
+RENDER_EXTERNAL_HOSTNAME = get_secret("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 31536000  # This is equivalent to 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
-ALLOWED_HOSTS = [
-    "interface.amovil.co",
-    "interface.amovil.com.co",
-    "interfacep.amovil.com.co",
-    "127.0.0.1",
-    "localhost",
-    "0.0.0.0",
-]
+
 CSRF_TRUSTED_ORIGINS = [
     "https://interface.amovil.com.co",
     "http://interfacep.amovil.com.co",
@@ -59,8 +63,8 @@ else:
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR.child("static")]
-STATIC_ROOT = BASE_DIR.child("staticfiles")
-# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = BASE_DIR.child("code","staticfiles")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR.child("media")
