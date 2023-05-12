@@ -3,12 +3,11 @@ import sys
 
 
 ALLOWED_HOSTS = [
-    "https://interface.amovil.com.co",
-    "http://interfacep.amovil.com.co",
-    "https://interfacep.amovil.com.co",
-    "http://127.0.0.1",
-    "http://localhost",
-    "http://0.0.0.0"
+    "interface.amovil.com.co",
+    "interfacep.amovil.com.co",
+    "127.0.0.1",
+    "localhost",
+    "localhost:4085"
 ]
 
 RENDER_EXTERNAL_HOSTNAME = get_secret("RENDER_EXTERNAL_HOSTNAME")
@@ -17,10 +16,13 @@ if RENDER_EXTERNAL_HOSTNAME:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 SESSION_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
-SECURE_HSTS_SECONDS = 31536000  # This is equivalent to 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+
+
+# esto cuando no se maneja el redireccionamiento con nginx
+# SECURE_SSL_REDIRECT = True
+# SECURE_HSTS_SECONDS = 31536000  # This is equivalent to 1 year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
 
 CSRF_TRUSTED_ORIGINS = [

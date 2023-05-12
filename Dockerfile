@@ -1,20 +1,34 @@
-# Pull base image
+# Usamos la imagen oficial de Python 3.10 como imagen base
 FROM python:3.10
-# Set environment variables
-ENV PIP_DISABLE_PIP_VERSION_CHECK 1
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-# Set work directory
+
+# Establecemos /code como el directorio de trabajo dentro del contenedor
 WORKDIR /code
 
-RUN pip install --upgrade pip
+# Configuramos variables de entorno
+# 1. Deshabilita la comprobación de la versión de pip
+ENV PIP_DISABLE_PIP_VERSION_CHECK 1
+# 2. Evita que Python escriba archivos .pyc
+ENV PYTHONDONTWRITEBYTECODE 1
+# 3. Asegura que las salidas de Python se impriman en tiempo real
+ENV PYTHONUNBUFFERED 1
 
-# Install dependencies
+# Copiamos requirements.txt a /code en el contenedor
 COPY ./requirements.txt .
 
-RUN pip install packaging
+# Instalamos las dependencias de Python especificadas en requirements.txt
+# Usamos --no-cache-dir para prevenir que pip almacene los paquetes descargados
 RUN pip install --no-cache-dir -r requirements.txt
-# Copy project
-COPY ./ ./
-RUN python manage.py collectstatic --settings=InterfaceDjango.settings.prod --no-input 
-CMD ["gunicorn", "--bind", "0.0.0.0:4085", "--timeout", "3600", "InterfaceDjango.wsgi:application"]
+
+# Copiamos todos los archivos y directorios al directorio de trabajo en el contenedor
+COPY . .
+
+# Ejecutamos el comando collectstatic de Django para recoger archivos estáticos
+RUN python manage.py collectstatic --no-input
+
+# Definimos los volúmenes para los datos que deben persistir entre ejecuciones del contenedor
+VOLUME /code/staticfiles
+VOLUME /code/media
+
+# Especificamos el comando que se ejecutará cuando se inicie el contenedor
+# Iniciamos un servidor Gunicorn que sirve la aplicación Django
+CMD ["gunicorn", "--bind", "0.0.0.0:4085", "--timeout", "7200", "InterfaceDjango.wsgi:application"]

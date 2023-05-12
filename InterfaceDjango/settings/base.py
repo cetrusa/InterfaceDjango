@@ -48,7 +48,8 @@ LOCAL_APPS = (
     "applications.permisos",
 )
 
-THIRD_PARTY_APPS = ("captcha",)
+THIRD_PARTY_APPS = ("captcha",
+)
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
