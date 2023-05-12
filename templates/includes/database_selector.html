@@ -12,15 +12,14 @@
 </form>
 <!-- Código JavaScript relacionado con el selector de bases de datos -->
 <script>
-    var database = null;
+    
     $(document).ready(function () {
+        var database = window.sessionStorage.getItem("database_name");
         $.get('{% url "users_app:database_list" %}', function (data) {
             var databaseSelect = $('#database_select');
             $.each(data.database_list, function (index, database) {
                 databaseSelect.append('<option value="' + database.database_name + '">' + database.database_nmEmpresa + '</option>');
             });
-
-            var database = window.sessionStorage.getItem("database_name");
 
             if (database) {
                 updateDatabaseName(database);
@@ -32,7 +31,7 @@
 
         document.getElementById("database_select").addEventListener("change", function () {
             var select = this;
-            var database = select.options[select.selectedIndex].value;
+            database = select.options[select.selectedIndex].value;
             window.sessionStorage.setItem("database_name", database);
             updateDatabaseName(database);
         });

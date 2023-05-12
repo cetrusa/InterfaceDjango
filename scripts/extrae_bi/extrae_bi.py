@@ -19,6 +19,7 @@ logging.info('Inciando Proceso')
 class Extrae_Bi():
     def __init__(self,database_name):    
         ConfigBasic(database_name)
+        StaticPage = StaticPage()
         
     def extractor(self):
         ItpReporte = StaticPage.txProcedureExtrae

@@ -13,6 +13,7 @@ from django.http import HttpResponse,FileResponse,JsonResponse
 from scripts.StaticPage import StaticPage
 from scripts.conexion import Conexion
 from scripts.config import ConfigBasic
+from celery import shared_task
 
 ####################################################################
 import logging
@@ -28,7 +29,8 @@ class Cubo_Ventas:
         StaticPage.IdtReporteIni=IdtReporteIni
         StaticPage.IdtReporteFin=IdtReporteFin
     
-    def Procedimiento_a_Excel(self):
+    @shared_task
+    def Procedimiento_a_Excel():
         a = StaticPage.dbBi
         IdDs = ''
         compra = 0

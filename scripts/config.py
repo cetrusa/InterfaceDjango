@@ -27,6 +27,7 @@ class ConfigBasic():
     try:
         StaticPage = StaticPage()
         def __init__(self,database_name):
+            
             StaticPage.name = str(database_name)
             
             # StaticPage.name = 'altimax'

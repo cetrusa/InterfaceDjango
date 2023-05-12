@@ -1,17 +1,39 @@
-version: '3.3'
+version: '3.9'
+
 services:
-  web:
-    build: .
-    command: gunicorn --bind 0.0.0.0:4085 --timeout 999999 InterfaceDjango.wsgi:application
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cetrusa/interface-django:cats
+    command: gunicorn --bind 0.0.0.0:4085 --timeout 7200 InterfaceDjango.wsgi:application
+    ports:
+      - 4085:4085
     volumes:
-      - .:/code
       - static_volume:/code/staticfiles
       - media_volume:/code/media
-    ports:
-      - "4085:4085"
     environment:
       - DJANGO_SETTINGS_MODULE
       - DB_HOST
+      - DB_PORT
+      - PORT=4085
+    depends_on:
+      - redis
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cetrusa/interface-django:cats
+    command: celery -A InterfaceDjango worker --loglevel=info
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+  redis:
+    image: redis:6.2.5
+
 volumes:
-  static_volume: {}
-  media_volume: {}
+  static_volume:
+  media_volume:
+
+

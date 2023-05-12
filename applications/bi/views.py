@@ -56,8 +56,8 @@ class ActualizacionBiPage(LoginRequiredMixin, BaseView):
         return super().dispatch(request, *args, **kwargs)
                 
     def post(self, request, *args, **kwargs):
-        
-        database_name = request.session.get('database_name') or request.POST.get('database_select')
+        database_name = request.POST.get('database_select')
+        # database_name = request.session.get('database_name') or request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 
@@ -119,10 +119,12 @@ class IncrustarBiPage(LoginRequiredMixin, BaseView):
 
     def process_request(self, request):
         print(request.session.items())
-        database_name = request.session.get('database_name') or request.POST.get('database_select')
-        print(database_name)
+        database_name = request.POST.get('database_select')
         if not database_name:
-            return redirect('home_app:panel')
+            database_name = request.session.get('database_name')
+            print(database_name)
+            if not database_name:
+                return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
         StaticPage.name = database_name
@@ -149,6 +151,9 @@ class IncrustarBiPage(LoginRequiredMixin, BaseView):
 
     def post(self, request, *args, **kwargs):
         context = self.process_request(request)
+        database_name = request.POST.get('database_select')
+        request.session['database_name'] = database_name
+        StaticPage.name = database_name
         if 'error_message' in context:
             context = {'error_message': context.get('error')}
         return render(request, self.template_name, context)

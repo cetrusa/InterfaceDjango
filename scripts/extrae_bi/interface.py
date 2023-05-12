@@ -27,6 +27,7 @@ logging.info('Inciando Proceso')
 class Interface_Contable:
     StaticPage = StaticPage()
     def __init__(self,database_name,IdtReporteIni, IdtReporteFin):
+        
         ConfigBasic(database_name)
         StaticPage.IdtReporteIni=IdtReporteIni
         StaticPage.IdtReporteFin=IdtReporteFin

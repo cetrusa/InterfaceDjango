@@ -38,6 +38,7 @@ class HomePage(LoginRequiredMixin, BaseView):
             return redirect('home_app:panel')
 
         request.session['database_name'] = database_name
+        StaticPage.name = database_name
         
         return redirect('home_app:panel')
     
@@ -124,7 +125,8 @@ class InterfacePage(LoginRequiredMixin, BaseView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        database_name = request.session.get('database_name') or request.POST.get('database_select')
+        database_name = request.POST.get('database_select')
+        # database_name = request.session.get('database_name') or request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 
@@ -164,7 +166,8 @@ class PlanoPage(LoginRequiredMixin, BaseView):
         return super().dispatch(request, *args, **kwargs)
         
     def post(self, request, *args, **kwargs):
-        database_name = request.session.get('database_name') or request.POST.get('database_select')
+        database_name = request.POST.get('database_select')
+        # database_name = request.session.get('database_name') or request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 
@@ -205,7 +208,8 @@ class ActualizacionPage(LoginRequiredMixin, BaseView):
         return super().dispatch(request, *args, **kwargs)
         
     def post(self, request, *args, **kwargs):
-        database_name = request.session.get('database_name') or request.POST.get('database_select')
+        database_name = request.POST.get('database_select')
+        # database_name = request.session.get('database_name') or request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 
@@ -235,7 +239,8 @@ class PruebaPage(LoginRequiredMixin, BaseView):
     login_url = reverse_lazy('users_app:user-login')
     
     def post(self, request, *args, **kwargs):
-        database_name = request.session.get('database_name') or request.POST.get('database_select')
+        # database_name = request.session.get('database_name') or request.POST.get('database_select')
+        database_name = request.POST.get('database_select')
         if not database_name:
             return redirect('home_app:panel')
 
