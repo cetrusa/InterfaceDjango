@@ -32,7 +32,6 @@ class HomePage(LoginRequiredMixin, BaseView):
     template_name = "home/panel.html"
     login_url = reverse_lazy('users_app:user-login')
     
-    @csrf_protect
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get('database_select')
         if not database_name:
