@@ -18,31 +18,21 @@ if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 
-
-# esto cuando no se maneja el redireccionamiento con nginx
-# SECURE_SSL_REDIRECT = True
-# SECURE_HSTS_SECONDS = 31536000  # This is equivalent to 1 year
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# SECURE_HSTS_PRELOAD = True
-
+CSRF_COOKIE_SECURE = False
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://interface.amovil.com.co",
+    "http://interface.amovil.com.co",
     "http://interfacep.amovil.com.co",
-    "https://interfacep.amovil.com.co",
     "http://127.0.0.1",
     "http://localhost",
     "http://0.0.0.0",
     "http://181.49.241.226",
     "http://181.49.241.226:4084",
-    "https://interface.amovil.co:4084",
     "http://interface.amovil.co:4084",
 ]
 
-
-CSRF_COOKIE_SECURE = True
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
