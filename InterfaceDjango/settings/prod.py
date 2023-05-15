@@ -7,7 +7,9 @@ ALLOWED_HOSTS = [
     "interfacep.amovil.com.co",
     "127.0.0.1",
     "localhost",
-    "localhost:4085"
+    "localhost:4085",
+    "181.49.241.226",
+    "interface.amovil.co",
 ]
 
 RENDER_EXTERNAL_HOSTNAME = get_secret("RENDER_EXTERNAL_HOSTNAME")
@@ -31,7 +33,10 @@ CSRF_TRUSTED_ORIGINS = [
     "https://interfacep.amovil.com.co",
     "http://127.0.0.1",
     "http://localhost",
-    "http://0.0.0.0"
+    "http://0.0.0.0",
+    "http://181.49.241.226/",
+    "https://interface.amovil.co/",
+    "http://interface.amovil.co/",
 ]
 
 CSRF_COOKIE_SECURE = True
@@ -80,8 +85,10 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR.child("media")
 
 # EMAIL SETTINGS
-ADMINS = [('Augusto', 'cetrusa@hotmail.com'),]
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+ADMINS = [
+    ("Augusto", "cetrusa@hotmail.com"),
+]
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = get_secret("EMAIL")
@@ -93,18 +100,14 @@ sys.path.append(BASE_DIR.child("scripts", "extrae_bi"))
 
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True,
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "mail_admins": {
+            "level": "ERROR",
+            "class": "django.utils.log.AdminEmailHandler",
+            "include_html": True,
         }
     },
-    'root': {
-        'handlers': ['mail_admins'],
-        'level': 'ERROR'
-    }
+    "root": {"handlers": ["mail_admins"], "level": "ERROR"},
 }
-
