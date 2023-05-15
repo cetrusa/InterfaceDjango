@@ -34,6 +34,10 @@ CSRF_TRUSTED_ORIGINS = [
     "http://interface.amovil.co",
 ]
 
+# esto es solo para no usar ssl mientras se soluciona
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
