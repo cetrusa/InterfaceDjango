@@ -8,8 +8,8 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "localhost:4085",
-    "181.49.241.226",
-    "interface.amovil.co"
+    "181.49.241.226:4084",
+    "interface.amovil.co",
 ]
 
 RENDER_EXTERNAL_HOSTNAME = get_secret("RENDER_EXTERNAL_HOSTNAME")
@@ -28,15 +28,13 @@ SESSION_COOKIE_SECURE = True
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://interface.amovil.com.co",
-    "http://interfacep.amovil.com.co",
-    "https://interfacep.amovil.com.co",
-    "http://127.0.0.1",
-    "http://localhost",
-    "http://0.0.0.0",
-    "http://181.49.241.226:4084/",
-    "https://interface.amovil.co:4084/",
-    "http://interface.amovil.co:4084/"
+    "interface.amovil.com.co",
+    "interfacep.amovil.com.co",
+    "127.0.0.1",
+    "localhost",
+    "0.0.0.0",
+    "181.49.241.226:4084",
+    "interface.amovil.co:4084",
 ]
 
 CSRF_COOKIE_SECURE = True
