@@ -31,6 +31,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://181.49.241.226",
     "http://181.49.241.226:4084",
     "http://interface.amovil.co:4084",
+    "http://interface.amovil.co",
 ]
 
 
