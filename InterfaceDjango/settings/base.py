@@ -4,6 +4,7 @@ import pymysql
 import os, random, string
 from unipath import Path
 import datetime
+
 # import pytz
 
 BASE_DIR = Path(__file__).ancestor(3)
@@ -48,8 +49,7 @@ LOCAL_APPS = (
     "applications.permisos",
 )
 
-THIRD_PARTY_APPS = ("captcha",
-)
+THIRD_PARTY_APPS = ("captcha",)
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
