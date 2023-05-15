@@ -35,6 +35,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1",
     "http://localhost",
     "http://0.0.0.0",
+    "http://181.49.241.226",
     "http://181.49.241.226:4084",
     "https://interface.amovil.co:4084",
     "http://interface.amovil.co:4084",
