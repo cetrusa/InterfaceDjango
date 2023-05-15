@@ -5,7 +5,7 @@ import os, random, string
 from unipath import Path
 import datetime
 
-# import pytz
+import pytz
 
 BASE_DIR = Path(__file__).ancestor(3)
 
@@ -68,7 +68,7 @@ ROOT_URLCONF = "InterfaceDjango.urls"
 
 # Tiempo de inactividad antes de cerrar la sesión automáticamente (en segundos)
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_COOKIE_AGE = 3600  # 3600 segundos son 60 minutos
+SESSION_COOKIE_AGE = 84000  # 3600 segundos son 60 minutos
 
 RECAPTCHA_PUBLIC_KEY = "6LeffTwlAAAAAKYsF2RHBuWmMxSMYLo7DvWb_szY"
 RECAPTCHA_PRIVATE_KEY = "6LeffTwlAAAAAMwYZgijw9H4HQLMssatf7xayp8k"
@@ -116,7 +116,7 @@ AUTH_USER_MODEL = "users.User"
 
 LANGUAGE_CODE = "es-co"
 
-TIME_ZONE = "UTC"
+# TIME_ZONE = "America/Bogota"
 
 USE_I18N = True
 
