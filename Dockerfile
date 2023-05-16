@@ -22,6 +22,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiamos todos los archivos y directorios al directorio de trabajo en el contenedor
 COPY . .
 
+# ajustamos la zona horaria del contenedor
+RUN ln -sf /usr/share/zoneinfo/America/Bogota /etc/localtime
 # Ejecutamos el comando collectstatic de Django para recoger archivos estáticos
 RUN python manage.py collectstatic --no-input
 

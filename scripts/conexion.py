@@ -60,11 +60,11 @@ class Conexion:
             # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
             # new connection from the pool. After the specified amount of time, an
             # exception will be thrown.
-            pool_timeout=900,  # 900 seconds (15 minutos)
+            pool_timeout=86400,  # 900 seconds (15 minutos)
             # 'pool_recycle' is the maximum number of seconds a connection can persist.
             # Connections that live longer than the specified amount of time will be
             # re-established
-            pool_recycle=3600,  # 1 hora
+            pool_recycle=86400,  # 1 hora
             )
             
         except Exception as e:
