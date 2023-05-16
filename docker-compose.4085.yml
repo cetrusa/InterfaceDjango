@@ -1,0 +1,17 @@
+version: '3.3'
+services:
+  web:
+    build: .
+    command: gunicorn --bind 0.0.0.0:4085 --timeout 28800 InterfaceDjango.wsgi:application
+    volumes:
+      - .:/code
+      - static_volume:/code/staticfiles
+      - media_volume:/code/media
+    ports:
+      - "4085:4085"
+    environment:
+      - DJANGO_SETTINGS_MODULE
+      - DB_HOST
+volumes:
+  static_volume: {}
+  media_volume: {}
