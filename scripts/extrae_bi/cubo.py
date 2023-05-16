@@ -35,7 +35,7 @@ class Cubo_Ventas:
         StaticPage.IdtReporteIni = IdtReporteIni
         StaticPage.IdtReporteFin = IdtReporteFin
 
-    def Procedimiento_a_Excel():
+    def Procedimiento_a_Excel(self):
         a = StaticPage.dbBi
         IdDs = ""
         compra = 0

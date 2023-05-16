@@ -31,4 +31,4 @@ VOLUME /code/media
 
 # Especificamos el comando que se ejecutará cuando se inicie el contenedor
 # Iniciamos un servidor Gunicorn que sirve la aplicación Django
-CMD ["gunicorn", "--bind", "0.0.0.0:4085", "--timeout", "7200", "InterfaceDjango.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:4085", "--timeout", "84000", "InterfaceDjango.wsgi:application"]
