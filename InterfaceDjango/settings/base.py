@@ -5,7 +5,7 @@ import os, random, string
 from unipath import Path
 import datetime
 
-# import pytz
+import pytz
 
 BASE_DIR = Path(__file__).ancestor(3)
 
@@ -60,7 +60,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # "InterfaceDjango.middleware.auto_logout.AutoLogoutMiddleware",
+    "InterfaceDjango.middleware.auto_logout.AutoLogoutMiddleware",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -116,8 +116,8 @@ AUTH_USER_MODEL = "users.User"
 
 LANGUAGE_CODE = "es-co"
 
-# TIME_ZONE = "America/Bogota"
+USE_TZ = True
+
+TIME_ZONE = "America/Bogota"
 
 USE_I18N = True
-
-USE_TZ = True
