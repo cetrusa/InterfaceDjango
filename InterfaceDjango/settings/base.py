@@ -68,7 +68,7 @@ ROOT_URLCONF = "InterfaceDjango.urls"
 
 # Tiempo de inactividad antes de cerrar la sesión automáticamente (en segundos)
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_COOKIE_AGE = 84000  # 3600 segundos son 60 minutos
+SESSION_COOKIE_AGE = 28800  # 3600 segundos son 60 minutos
 
 RECAPTCHA_PUBLIC_KEY = "6LeffTwlAAAAAKYsF2RHBuWmMxSMYLo7DvWb_szY"
 RECAPTCHA_PRIVATE_KEY = "6LeffTwlAAAAAMwYZgijw9H4HQLMssatf7xayp8k"
