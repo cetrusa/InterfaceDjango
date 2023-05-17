@@ -17,10 +17,16 @@ RENDER_EXTERNAL_HOSTNAME = get_secret("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-SESSION_COOKIE_SECURE = True
 
-CSRF_COOKIE_SECURE = True
+# esto es solo para no usar ssl mientras se soluciona
+# import ssl
+# ssl._create_default_https_context = ssl._create_unverified_context
+
+
+DEBUG = False
+SESSION_COOKIE_SECURE = False
+
+CSRF_COOKIE_SECURE = False
 
 CSRF_TRUSTED_ORIGINS = [
     "htts://interface.amovil.com.co",
@@ -34,9 +40,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://interface.amovil.co",
 ]
 
-# esto es solo para no usar ssl mientras se soluciona
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
+
 
 
 # Database
