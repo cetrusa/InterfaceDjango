@@ -35,8 +35,8 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # esto es solo para no usar ssl mientras se soluciona
-# import ssl
-# ssl._create_default_https_context = ssl._create_unverified_context
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 # Database
