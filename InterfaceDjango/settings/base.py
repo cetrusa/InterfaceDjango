@@ -60,8 +60,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "InterfaceDjango.middleware.auto_logout.AutoLogoutMiddleware",
-    # 'django_session_timeout.middleware.SessionTimeoutMiddleware',
+    # "InterfaceDjango.middleware.auto_logout.AutoLogoutMiddleware",
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
