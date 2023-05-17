@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth import authenticate
 
-# from captcha.fields import ReCaptchaField
-# from captcha.widgets import ReCaptchaV2Checkbox
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV2Checkbox
 #
 from .models import User
 
@@ -52,7 +52,7 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(attrs={"placeholder": "Contraseña"}),
     )
 
-    # captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
     def clean(self):
         cleaned_data = super(LoginForm, self).clean()
         username = self.cleaned_data["username"]
