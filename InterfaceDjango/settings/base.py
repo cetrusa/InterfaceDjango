@@ -69,11 +69,11 @@ ROOT_URLCONF = "InterfaceDjango.urls"
 
 # Tiempo de inactividad antes de cerrar la sesión automáticamente (en segundos)
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
-SESSION_COOKIE_AGE = 1209600  # 2 semanas
-SESSION_EXPIRE_SECONDS = 28800  # Expire despues de 8 horas
-SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True # Invalide la sesión después de la actividad más reciente/última
-SESSION_TIMEOUT_REDIRECT = 'login/' # Add your URL
-SESSION_EXPIRE_AT_BROWSER_CLOSE=True # Invalid session
+# SESSION_COOKIE_AGE = 1209600  # 2 semanas
+# SESSION_EXPIRE_SECONDS = 28800  # Expire despues de 8 horas
+# SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True # Invalide la sesión después de la actividad más reciente/última
+# SESSION_TIMEOUT_REDIRECT = 'login/' # Add your URL
+# SESSION_EXPIRE_AT_BROWSER_CLOSE=True # Invalid session
 
 
 RECAPTCHA_PUBLIC_KEY = "6LeffTwlAAAAAKYsF2RHBuWmMxSMYLo7DvWb_szY"
