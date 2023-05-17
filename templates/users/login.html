@@ -54,7 +54,7 @@ Login
                             <label class="form-check-label" for="rememberMe">Recuérdame</label>
                         </div>
                         <div>
-                            {{ form.captcha }}
+                            <!-- {{ form.captcha }} -->
                         </div>
                         <div class="mb-3">
                             <a href="{% url 'users_app:password_reset' %}">¿Olvidaste tu contraseña?</a>
@@ -68,5 +68,5 @@ Login
     </div>
 </div>
 
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
 {% endblock content %}
