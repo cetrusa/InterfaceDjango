@@ -29,7 +29,7 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 CSRF_TRUSTED_ORIGINS = [
-    "htts://interface.amovil.com.co",
+    "https://interface.amovil.com.co",
     "https://interfacep.amovil.com.co",
     "http://127.0.0.1",
     "http://localhost",
