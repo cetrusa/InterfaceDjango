@@ -2,13 +2,13 @@ version: '3.3'
 services:
   web:
     build: .
-    command: python manage.py migrate && python manage.py runserver 0.0.0.0:4084
+    command: python manage.py migrate && python manage.py runserver 0.0.0.0:4085
     volumes:
       - .:/code
       - static_volume:/code/staticfiles
       - media_volume:/code/media
     ports:
-      - "4084:4084"
+      - "4085:4085"
     environment:
       - DJANGO_SETTINGS_MODULE
       - DB_HOST
