@@ -10,42 +10,43 @@ Cubo de Ventas
 <!-- contenido de la pagina -->
 <br>
 <br>
-  <div class="card" style="width: 25rem;">
-    <div class="card-header text-center">
-      <h2>Cubo de Ventas</h2>
-    </div>
-    <div class="card-body">
-      <form action="{% url 'home_app:cubo' %}" method="post" id="myForm">
-        {% csrf_token %}
-          <label for="date_input">Fecha:</label>
-          <div id="reportrange"
-            style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-            <i class="fa fa-calendar"></i>&nbsp;
-            <span></span> <i class="fa fa-caret-down"></i>
-          </div>
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th><label class="lh-1" for="IdtReporteIni">Fecha Inicial:</label></th>
-                <th><label class="lh-1" for="IdtReporteFin">Fecha Final:</label></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th><input type="date" name="IdtReporteIni" id="IdtReporteIni" readonly></th>
-                <th><input type="date" name="IdtReporteFin" id="IdtReporteFin" readonly></th>
-              </tr>
-            </tbody>
-          </table>
-          </li>
-        </div>
-        <span class="card text-center"><button id="submitBtn" type="submit" class="btn btn-primary">Generar Cubo de Ventas</button></span>
-      </form>
+<div class="card" style="width: 25rem;">
+  <div class="card-header text-center">
+    <h2>Cubo de Ventas</h2>
+  </div>
+  <div class="card-body">
+    <form action="{% url 'home_app:cubo' %}" method="post" id="myForm">
+      {% csrf_token %}
+      <label for="date_input">Fecha:</label>
+      <div id="reportrange"
+        style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+        <i class="fa fa-calendar"></i>&nbsp;
+        <span></span> <i class="fa fa-caret-down"></i>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th><label class="lh-1" for="IdtReporteIni">Fecha Inicial:</label></th>
+            <th><label class="lh-1" for="IdtReporteFin">Fecha Final:</label></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th><input type="date" name="IdtReporteIni" id="IdtReporteIni" readonly></th>
+            <th><input type="date" name="IdtReporteFin" id="IdtReporteFin" readonly></th>
+          </tr>
+        </tbody>
+      </table>
+      </li>
+  </div>
+  <span class="card text-center"><button id="submitBtn" type="submit" class="btn btn-primary">Generar Cubo de
+      Ventas</button></span>
+  </form>
 
-      <br>
-      <br>
-      {% include 'includes/download_file.html' %}
-    </div>
+  <br>
+  <br>
+  {% include 'includes/download_file.html' %}
+</div>
 <!-- Este es el Modal -->
 <div class="modal" id="processingModal">
   <div class="modal-dialog">
@@ -86,7 +87,7 @@ Cubo de Ventas
         handleServerResponse(this.status, response);
       }
     };
-    
+
     var database = window.sessionStorage.getItem("database_name");
     var IdtReporteIni = document.getElementById("IdtReporteIni").value;
     var IdtReporteFin = document.getElementById("IdtReporteFin").value;
@@ -95,28 +96,28 @@ Cubo de Ventas
 
   function handleServerResponse(status, response) {
     if (status === 200) {
-        try {
-            if (typeof response === "object" && "success" in response) {
-                if (response.success) {
-                    // Almacena el ID de la tarea y empieza a verificar el estado de la tarea
-                    window.sessionStorage.setItem("task_id", response.task_id);
-                    checkTaskStatus();
-                } else {
-                    alert("Hubo un error al iniciar el proceso: " + response.error_message);
-                }
-            } else {
-                throw new Error("La respuesta del servidor no es un objeto JSON válido");
-            }
-        } catch (e) {
-            alert("Hubo un error al iniciar el proceso, por favor inténtelo de nuevo.");
-            console.error(e);
+      try {
+        if (typeof response === "object" && "success" in response) {
+          if (response.success) {
+            // Almacena el ID de la tarea y empieza a verificar el estado de la tarea
+            window.sessionStorage.setItem("task_id", response.task_id);
+            checkTaskStatus();
+          } else {
+            alert("Hubo un error al iniciar el proceso: " + response.error_message);
+          }
+        } else {
+          throw new Error("La respuesta del servidor no es un objeto JSON válido");
         }
-    } else {
+      } catch (e) {
         alert("Hubo un error al iniciar el proceso, por favor inténtelo de nuevo.");
+        console.error(e);
+      }
+    } else {
+      alert("Hubo un error al iniciar el proceso, por favor inténtelo de nuevo.");
     }
-}
-// función para revisar estatus de la tarea
-function checkTaskStatus() {
+  }
+  // función para revisar estatus de la tarea
+  function checkTaskStatus() {
     var task_id = window.sessionStorage.getItem("task_id");
 
     var xhr = new XMLHttpRequest();
@@ -125,35 +126,35 @@ function checkTaskStatus() {
     xhr.setRequestHeader("X-CSRFToken", csrf_token);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function () {
-        if (this.readyState === XMLHttpRequest.DONE) {
-            var response = JSON.parse(this.responseText);
-            handleTaskStatus(this.status, response);
-        }
+      if (this.readyState === XMLHttpRequest.DONE) {
+        var response = JSON.parse(this.responseText);
+        handleTaskStatus(this.status, response);
+      }
     };
     xhr.send("task_id=" + encodeURIComponent(task_id));
-}
+  }
 
-function handleTaskStatus(status, response) {
+  function handleTaskStatus(status, response) {
     if (status === 200) {
-        if (typeof response === "object" && "status" in response) {
-            if (response.status === "SUCCESS") {
-                // La tarea se ha completado, podemos mostrar el resultado al usuario
-                document.getElementById("download_file").className = 'd-flex';
-                alert("Proceso terminado");
-            } else if (response.status === "FAILURE") {
-                // La tarea falló
-                alert("Hubo un error en el proceso: " + response.error_message);
-            } else {
-                // La tarea aún se está ejecutando, verifica el estado de nuevo después de un tiempo
-                setTimeout(checkTaskStatus, 5000);
-            }
+      if (typeof response === "object" && "status" in response) {
+        if (response.status === "SUCCESS") {
+          // La tarea se ha completado, podemos mostrar el resultado al usuario
+          document.getElementById("download_file").className = 'd-flex';
+          alert("Proceso terminado");
+        } else if (response.status === "FAILURE") {
+          // La tarea falló
+          alert("Hubo un error en el proceso: " + response.error_message);
         } else {
-            alert("La respuesta del servidor no es un objeto JSON válido");
+          // La tarea aún se está ejecutando, verifica el estado de nuevo después de un tiempo
+          setTimeout(checkTaskStatus, 5000);
         }
+      } else {
+        alert("La respuesta del servidor no es un objeto JSON válido");
+      }
     } else {
-        alert("Hubo un error al comprobar el estado de la tarea, por favor inténtelo de nuevo.");
+      alert("Hubo un error al comprobar el estado de la tarea, por favor inténtelo de nuevo.");
     }
-}
+  }
 
   // Función para borrar el archivo después de descargarlo
   function deleteFile() {
