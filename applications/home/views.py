@@ -21,6 +21,11 @@ from scripts.extrae_bi.extrae_bi import Extrae_Bi
 from scripts.extrae_bi.cubo import Cubo_Ventas
 from scripts.extrae_bi.interface import Interface_Contable
 from django.contrib.auth.mixins import UserPassesTestMixin
+from .tasks import cubo_ventas_task
+from celery.result import AsyncResult
+from django.http import JsonResponse
+from django.views import View
+
 
 
 from django.views.generic import (
@@ -75,7 +80,18 @@ class DeleteFileView(View):
         except Exception as e:
             return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
 
-    
+
+
+class CheckTaskStatusView(View):
+    def post(self, request, *args, **kwargs):
+        task_id = request.POST.get('task_id')
+        task_result = AsyncResult(task_id)
+        response_data = {
+            'status': task_result.status,
+            'result': task_result.result,
+        }
+        return JsonResponse(response_data)
+
 class CuboPage(LoginRequiredMixin, BaseView):
     template_name = "home/cubo.html"
     StaticPage.template_name = template_name

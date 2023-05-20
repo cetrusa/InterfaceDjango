@@ -95,25 +95,66 @@ Cubo de Ventas
 
   function handleServerResponse(status, response) {
     if (status === 200) {
-      try {
-        if (typeof response === "object" && "success" in response && "error_message" in response) {
-          if (response.success) {
-            document.getElementById("download_file").className = 'd-flex';
-            alert("Proceso terminado");
-          } else {
-            alert("Hubo un error en el proceso: " + response.error_message);
-          }
-        } else {
-          throw new Error("La respuesta del servidor no es un objeto JSON válido");
+        try {
+            if (typeof response === "object" && "success" in response) {
+                if (response.success) {
+                    // Almacena el ID de la tarea y empieza a verificar el estado de la tarea
+                    window.sessionStorage.setItem("task_id", response.task_id);
+                    checkTaskStatus();
+                } else {
+                    alert("Hubo un error al iniciar el proceso: " + response.error_message);
+                }
+            } else {
+                throw new Error("La respuesta del servidor no es un objeto JSON válido");
+            }
+        } catch (e) {
+            alert("Hubo un error al iniciar el proceso, por favor inténtelo de nuevo.");
+            console.error(e);
         }
-      } catch (e) {
-        alert("Hubo un error en el proceso, por favor inténtelo de nuevo.");
-        console.error(e);
-      }
     } else {
-      alert("Hubo un error en el proceso, por favor inténtelo de nuevo.");
+        alert("Hubo un error al iniciar el proceso, por favor inténtelo de nuevo.");
     }
-  }
+}
+// función para revisar estatus de la tarea
+function checkTaskStatus() {
+    var task_id = window.sessionStorage.getItem("task_id");
+
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = "text";
+    xhr.open("POST", "{% url 'home_app:check_task_status' %}", true);
+    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (this.readyState === XMLHttpRequest.DONE) {
+            var response = JSON.parse(this.responseText);
+            handleTaskStatus(this.status, response);
+        }
+    };
+    xhr.send("task_id=" + encodeURIComponent(task_id));
+}
+
+function handleTaskStatus(status, response) {
+    if (status === 200) {
+        if (typeof response === "object" && "status" in response) {
+            if (response.status === "SUCCESS") {
+                // La tarea se ha completado, podemos mostrar el resultado al usuario
+                document.getElementById("download_file").className = 'd-flex';
+                alert("Proceso terminado");
+            } else if (response.status === "FAILURE") {
+                // La tarea falló
+                alert("Hubo un error en el proceso: " + response.error_message);
+            } else {
+                // La tarea aún se está ejecutando, verifica el estado de nuevo después de un tiempo
+                setTimeout(checkTaskStatus, 5000);
+            }
+        } else {
+            alert("La respuesta del servidor no es un objeto JSON válido");
+        }
+    } else {
+        alert("Hubo un error al comprobar el estado de la tarea, por favor inténtelo de nuevo.");
+    }
+}
+
   // Función para borrar el archivo después de descargarlo
   function deleteFile() {
     // Realiza una llamada a una vista en Django que se encargue de borrar el archivo

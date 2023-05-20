@@ -38,5 +38,5 @@ urlpatterns = [
     ),
    path('download_file/', views.DownloadFileView.as_view(), name='download_file'),
    path('delete_file/', views.DeleteFileView.as_view(), name='delete_file'),
-   
+   path('check-task-status/', views.CheckTaskStatusView.as_view(), name='check_task_status'),
 ]
