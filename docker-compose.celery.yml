@@ -32,7 +32,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 4G
 
   db:
     image: redis:latest
