@@ -71,6 +71,7 @@ class Cubo_Ventas:
                                 f"No fue posible generar la información por {e}"
                             )
                         )
+
         else:
             return JsonResponse(
                 {
@@ -78,3 +79,4 @@ class Cubo_Ventas:
                     "error_message": f"La empresa {StaticPage.nmEmpresa} no maneja cubo",
                 }
             )
+        # time.sleep(3)

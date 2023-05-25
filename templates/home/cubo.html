@@ -39,7 +39,7 @@ Cubo de Ventas
       </table>
       </li>
   </div>
-  <span class="card text-center"><button id="submitBtn" type="submit" class="btn btn-primary">Generar Cubo de
+  <span class="card text-center"><button id="submitBtn" type="submit" class="btn btn-primary" data-submitted="false">Generar Cubo de
       Ventas</button></span>
   </form>
 
@@ -71,17 +71,23 @@ Cubo de Ventas
   var csrf_token = document.getElementsByName("csrfmiddlewaretoken")[0].value;
   document.getElementById("submitBtn").addEventListener("click", function (event) {
     event.preventDefault();
+    // Check if a task is already in progress
+    if (this.getAttribute("data-submitted") === "true") {
+        alert("Ya hay una tarea en curso.");
+        return;
+    }
+
+    this.setAttribute("data-submitted", "true");
     document.getElementById("processingModal").style.display = "flex";
 
     // Realiza la solicitud AJAX al servidor
     var xhr = new XMLHttpRequest();
     xhr.responseType = "text";
-    xhr.open("POST", "{% url form_url %}", true);
+    xhr.open("POST", "{% url 'home_app:cubo' %}", true);
     xhr.setRequestHeader("X-CSRFToken", csrf_token);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function () {
       if (this.readyState === XMLHttpRequest.DONE) {
-        document.getElementById("processingModal").style.display = "none";
         console.log(this.status, this.responseText);
         var response = JSON.parse(this.responseText);
         handleServerResponse(this.status, response);
@@ -94,31 +100,29 @@ Cubo de Ventas
     xhr.send("database_select=" + encodeURIComponent(database) + "&IdtReporteIni=" + encodeURIComponent(IdtReporteIni) + "&IdtReporteFin=" + encodeURIComponent(IdtReporteFin));
   });
 
+  // Manejar la respuesta del servidor
   function handleServerResponse(status, response) {
     if (status === 200) {
-      try {
-        if (typeof response === "object" && "success" in response) {
-          if (response.success) {
-            // Almacena el ID de la tarea y empieza a verificar el estado de la tarea
-            window.sessionStorage.setItem("task_id", response.task_id);
-            checkTaskStatus();
-          } else {
-            alert("Hubo un error al iniciar el proceso: " + response.error_message);
-          }
+      if (typeof response === "object" && "success" in response) {
+        if (response.success) {
+          // Almacena cubo_ventas_task_id en sessionStorage
+          window.sessionStorage.setItem("cubo_ventas_task_id", response.cubo_ventas_task_id);
+          // Comprueba el estado de la tarea
+          checkTaskStatus();
         } else {
-          throw new Error("La respuesta del servidor no es un objeto JSON válido");
+          alert("Hubo un error en el proceso: " + response.error_message);
         }
-      } catch (e) {
-        alert("Hubo un error al iniciar el proceso, por favor inténtelo de nuevo.");
-        console.error(e);
+      } else {
+        alert("La respuesta del servidor no es un objeto JSON válido");
       }
     } else {
-      alert("Hubo un error al iniciar el proceso, por favor inténtelo de nuevo.");
+      alert("Hubo un error al enviar la solicitud, código de estado: " + status);
     }
   }
+
   // función para revisar estatus de la tarea
   function checkTaskStatus() {
-    var task_id = window.sessionStorage.getItem("task_id");
+    var cubo_ventas_task_id = window.sessionStorage.getItem("cubo_ventas_task_id");
 
     var xhr = new XMLHttpRequest();
     xhr.responseType = "text";
@@ -131,30 +135,36 @@ Cubo de Ventas
         handleTaskStatus(this.status, response);
       }
     };
-    xhr.send("task_id=" + encodeURIComponent(task_id));
+    xhr.send("cubo_ventas_task_id=" + encodeURIComponent(cubo_ventas_task_id));
   }
 
+  // Revisar el estado de la tarea
   function handleTaskStatus(status, response) {
     if (status === 200) {
       if (typeof response === "object" && "status" in response) {
         if (response.status === "SUCCESS") {
           // La tarea se ha completado, podemos mostrar el resultado al usuario
+          document.getElementById("processingModal").style.display = "none";
           document.getElementById("download_file").className = 'd-flex';
           alert("Proceso terminado");
         } else if (response.status === "FAILURE") {
           // La tarea falló
-          alert("Hubo un error en el proceso: " + response.error_message);
-        } else {
+          document.getElementById("processingModal").style.display = "none";
+          alert("Hubo un error en el proceso: " + response.result);
+        } else if (response.status === "PENDING" || response.status === "RETRY") {
           // La tarea aún se está ejecutando, verifica el estado de nuevo después de un tiempo
           setTimeout(checkTaskStatus, 5000);
+        } else {
+          alert("Estado desconocido de la tarea: " + response.status);
         }
       } else {
         alert("La respuesta del servidor no es un objeto JSON válido");
       }
     } else {
-      alert("Hubo un error al comprobar el estado de la tarea, por favor inténtelo de nuevo.");
+      alert("Hubo un error al comprobar el estado de la tarea, código de estado: " + status);
     }
   }
+
 
   // Función para borrar el archivo después de descargarlo
   function deleteFile() {
@@ -178,12 +188,14 @@ Cubo de Ventas
   // Ejecuta las funciones después de descargar el archivo
   document.getElementById("download_file").addEventListener("click", function () {
     var link = this;
+    
     document.getElementById("download_file").className = 'd-none';
     link.onclick = function () {
       return false;
     };
     setTimeout(function () {
       deleteFile();
+      document.getElementById("submitBtn").setAttribute("data-submitted", "false");
       setTimeout(reloadForm, 1000);
     }, 1000);
   });
