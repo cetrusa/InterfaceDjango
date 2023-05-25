@@ -29,6 +29,11 @@ services:
     depends_on:
       - db
 
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
   db:
     image: redis:latest
     ports:
