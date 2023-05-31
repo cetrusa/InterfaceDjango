@@ -1,0 +1,43 @@
+version: '3.3'
+services:
+  web:
+    build: .
+    user: root
+    command: gunicorn --bind 0.0.0.0:4084 --timeout 28800 InterfaceDjango.wsgi:application
+    volumes:
+      - .:/code
+      - static_volume:/code/static
+    ports:
+      - "4084:4084"
+    environment:
+      - DJANGO_SETTINGS_MODULE
+      - DB_HOST
+    depends_on:
+      - db
+
+  celery:
+    build: .
+    command: celery -A InterfaceDjango.configcelery worker --loglevel=info
+    volumes:
+      - .:/code
+    environment:
+      - CELERY_BROKER_URL=redis://db:6379/0
+      - CELERY_RESULT_BACKEND=redis://db:6379/0
+      - CELERY_TASK_SOFT_TIME_LIMIT=7200
+      - CELERY_TASK_TIME_LIMIT=7200
+      - CELERY_TASK_EAGER_PROPAGATES=True
+    depends_on:
+      - db
+
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
+  db:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+volumes:
+  static_volume:

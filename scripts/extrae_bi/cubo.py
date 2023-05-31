@@ -14,6 +14,7 @@ from scripts.StaticPage import StaticPage
 from scripts.conexion import Conexion
 from scripts.config import ConfigBasic
 
+from openpyxl import Workbook
 ####################################################################
 import logging
 
@@ -44,34 +45,44 @@ class Cubo_Ventas:
         sql = StaticPage.nmProcedureExcel
         StaticPage.archivo_cubo_ventas = f"Cubo_de_Ventas_{StaticPage.name}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.xlsx"
         StaticPage.file_path = os.path.join("media", StaticPage.archivo_cubo_ventas)
-        if StaticPage.txProcedureExcel:
-            with pd.ExcelWriter(StaticPage.file_path, engine="openpyxl") as writer:
-                for hoja in StaticPage.txProcedureExcel:
-                    if a == "powerbi_tym_eje":
-                        sqlout = text(
-                            f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{hoja}','{compra}','{consig}','{nd}');"
-                        )
-                    else:
-                        sqlout = text(
-                            f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{hoja}');"
-                        )
-                    try:
-                        with StaticPage.conin2.connect() as connectionout:
-                            cursor = connectionout.execution_options(
-                                isolation_level="READ COMMITTED"
-                            )
-                            resultado = pd.read_sql_query(sql=sqlout, con=cursor)
-                            resultado.to_excel(
-                                writer, index=False, sheet_name=hoja, header=True
-                            )
-                            writer.sheets[hoja].sheet_state = "visible"
-                    except Exception as e:
-                        print(
-                            logging.info(
-                                f"No fue posible generar la información por {e}"
-                            )
-                        )
 
+        if StaticPage.txProcedureExcel:
+            workbook = Workbook()
+            # remove the default sheet created and create a new one with the desired name
+            default_sheet = workbook.active
+            workbook.remove(default_sheet)
+            
+            for hoja in StaticPage.txProcedureExcel:
+                if a == "powerbi_tym_eje":
+                    sqlout = text(
+                        f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{hoja}','{compra}','{consig}','{nd}');"
+                    )
+                else:
+                    sqlout = text(
+                        f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{hoja}');"
+                    )
+                try:
+                    with StaticPage.conin2.connect() as connectionout:
+                        cursor = connectionout.execution_options(
+                            isolation_level="READ COMMITTED"
+                        )
+                        resultado = pd.read_sql_query(sql=sqlout, con=cursor)
+
+                        # create a new sheet for this data
+                        worksheet = workbook.create_sheet(hoja)
+                        # add column headers
+                        worksheet.append(resultado.columns.tolist())
+                        for row in resultado.itertuples(index=False):
+                            worksheet.append(row)
+
+                except Exception as e:
+                    print(
+                        logging.info(
+                            f"No fue posible generar la información por {e}"
+                        )
+                    )
+
+            workbook.save(StaticPage.file_path)
         else:
             return JsonResponse(
                 {
@@ -79,4 +90,49 @@ class Cubo_Ventas:
                     "error_message": f"La empresa {StaticPage.nmEmpresa} no maneja cubo",
                 }
             )
+
+    # def Procedimiento_a_Excel(self):
+    #     a = StaticPage.dbBi
+    #     IdDs = ""
+    #     compra = 0
+    #     consig = 0
+    #     nd = 0
+    #     sql = StaticPage.nmProcedureExcel
+    #     StaticPage.archivo_cubo_ventas = f"Cubo_de_Ventas_{StaticPage.name}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.xlsx"
+    #     StaticPage.file_path = os.path.join("media", StaticPage.archivo_cubo_ventas)
+    #     if StaticPage.txProcedureExcel:
+    #         with pd.ExcelWriter(StaticPage.file_path, engine="openpyxl") as writer:
+    #             for hoja in StaticPage.txProcedureExcel:
+    #                 if a == "powerbi_tym_eje":
+    #                     sqlout = text(
+    #                         f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{hoja}','{compra}','{consig}','{nd}');"
+    #                     )
+    #                 else:
+    #                     sqlout = text(
+    #                         f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{hoja}');"
+    #                     )
+    #                 try:
+    #                     with StaticPage.conin2.connect() as connectionout:
+    #                         cursor = connectionout.execution_options(
+    #                             isolation_level="READ COMMITTED"
+    #                         )
+    #                         resultado = pd.read_sql_query(sql=sqlout, con=cursor)
+    #                         resultado.to_excel(
+    #                             writer, index=False, sheet_name=hoja, header=True
+    #                         )
+    #                         writer.sheets[hoja].sheet_state = "visible"
+    #                 except Exception as e:
+    #                     print(
+    #                         logging.info(
+    #                             f"No fue posible generar la información por {e}"
+    #                         )
+    #                     )
+
+    #     else:
+    #         return JsonResponse(
+    #             {
+    #                 "success": True,
+    #                 "error_message": f"La empresa {StaticPage.nmEmpresa} no maneja cubo",
+    #             }
+    #         )
         # time.sleep(3)
