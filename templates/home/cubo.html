@@ -39,7 +39,8 @@ Cubo de Ventas
       </table>
       </li>
   </div>
-  <span class="card text-center"><button id="submitBtn" type="submit" class="btn btn-primary" data-submitted="false">Generar Cubo de
+  <span class="card text-center"><button id="submitBtn" type="submit" class="btn btn-primary"
+      data-submitted="false">Generar Cubo de
       Ventas</button></span>
   </form>
 
@@ -73,8 +74,8 @@ Cubo de Ventas
     event.preventDefault();
     // Check if a task is already in progress
     if (this.getAttribute("data-submitted") === "true") {
-        alert("Ya hay una tarea en curso.");
-        return;
+      alert("Ya hay una tarea en curso.");
+      return;
     }
 
     this.setAttribute("data-submitted", "true");
@@ -153,7 +154,7 @@ Cubo de Ventas
           alert("Hubo un error en el proceso: " + response.result);
         } else if (response.status === "PENDING" || response.status === "RETRY") {
           // La tarea aún se está ejecutando, verifica el estado de nuevo después de un tiempo
-          setTimeout(checkTaskStatus, 5000);
+          setTimeout(checkTaskStatus, 20000);
         } else {
           alert("Estado desconocido de la tarea: " + response.status);
         }
@@ -188,7 +189,7 @@ Cubo de Ventas
   // Ejecuta las funciones después de descargar el archivo
   document.getElementById("download_file").addEventListener("click", function () {
     var link = this;
-    
+
     document.getElementById("download_file").className = 'd-none';
     link.onclick = function () {
       return false;
