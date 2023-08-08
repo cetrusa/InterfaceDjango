@@ -137,3 +137,5 @@ __pycache__/
 rsa_key
 rsa_key.pub
 .idea
+
+mydata.db
