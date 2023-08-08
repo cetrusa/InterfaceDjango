@@ -17,9 +17,9 @@ urlpatterns = [
     #     name='cubo',
     # ),
     path(
-        'cubo_celery/', 
-        views.CuboPage_celery.as_view(), 
-        name='cubo_celery',
+        'cubo/', 
+        views.CuboPage.as_view(), 
+        name='cubo',
     ),
     path(
         'interface/', 

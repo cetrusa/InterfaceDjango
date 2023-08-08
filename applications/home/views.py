@@ -22,7 +22,7 @@ from scripts.extrae_bi.cubo import Cubo_Ventas
 from scripts.extrae_bi.interface import Interface_Contable
 from django.contrib.auth.mixins import UserPassesTestMixin
 from .tasks import cubo_ventas_task
-from celery.result import AsyncResult
+# from celery.result import AsyncResult
 from django.http import JsonResponse
 from django.views import View
 
@@ -160,7 +160,7 @@ class CheckTaskStatusView(View):
 
         return JsonResponse(response_data)
 
-class CuboPage_celery(LoginRequiredMixin, BaseView):
+class CuboPage(LoginRequiredMixin, BaseView):
     template_name = "home/cubo.html"
     StaticPage.template_name = template_name
     login_url = reverse_lazy("users_app:user-login")
@@ -201,7 +201,7 @@ class CuboPage_celery(LoginRequiredMixin, BaseView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form_url"] = "home_app:cubo_celery"
+        context["form_url"] = "home_app:cubo"
         return context
     
 # esta clase se usa con celery  
