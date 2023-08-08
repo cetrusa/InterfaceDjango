@@ -2,7 +2,7 @@
 FROM python:3.10
 
 # Crea un usuario y un grupo para ejecutar la aplicación
-RUN groupadd -r celerygroup && useradd -r -g celerygroup celeryuser
+RUN groupadd -r interfacegroup && useradd -r -g interfacegroup adminuser
 # Establecemos /code como el directorio de trabajo dentro del contenedor
 WORKDIR /code
 
