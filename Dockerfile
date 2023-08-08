@@ -2,8 +2,7 @@
 FROM python:3.10
 
 # Crea un usuario y un grupo para ejecutar la aplicación
-# RUN groupadd -r interfacesidis && useradd -r -g interfacesidis interfacesidis
-
+RUN groupadd -r celerygroup && useradd -r -g celerygroup celeryuser
 # Establecemos /code como el directorio de trabajo dentro del contenedor
 WORKDIR /code
 
@@ -38,10 +37,6 @@ RUN chown -R root:root /code/media
 # Ejecutamos el comando collectstatic de Django para recoger archivos estáticos
 RUN python manage.py collectstatic --no-input
 
-# Definimos los volúmenes para los datos que deben persistir entre ejecuciones del contenedor
-# VOLUME /code/staticfiles
-# VOLUME /code/media
+# Cambiar al usuario no root
+USER celeryuser
 
-# Especificamos el comando que se ejecutará cuando se inicie el contenedor
-# Iniciamos un servidor Gunicorn que sirve la aplicación Django
-# CMD ["gunicorn", "--bind", "0.0.0.0:4085", "--timeout", "28800", "InterfaceDjango.wsgi:application"]

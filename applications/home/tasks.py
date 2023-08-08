@@ -1,9 +1,12 @@
-from celery import shared_task
+# from celery import shared_task
 from scripts.extrae_bi.cubo import Cubo_Ventas
 from scripts.StaticPage import StaticPage
 import logging
 
-@shared_task
+# @shared_task
+from django_rq import job
+
+@job
 def cubo_ventas_task(database_name, IdtReporteIni, IdtReporteFin):
     try:
         cubo_ventas = Cubo_Ventas(database_name, IdtReporteIni, IdtReporteFin)

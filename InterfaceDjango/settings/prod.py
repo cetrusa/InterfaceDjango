@@ -41,8 +41,6 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -115,10 +113,17 @@ LOGGING = {
 }
 
 
+# CELERY_BROKER_URL = "redis://redis:6379/0"
+# CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+# CELERY_TASK_SOFT_TIME_LIMIT = 7200
+# CELERY_TASK_TIME_LIMIT = 7200
+# CELERY_TASK_EAGER_PROPAGATES = True
 
-CELERY_BROKER_URL="redis://db:6379/0"
-CELERY_RESULT_BACKEND="redis://db:6379/0"
-CELERY_TASK_SOFT_TIME_LIMIT=7200
-CELERY_TASK_TIME_LIMIT=7200
-CELERY_TASK_EAGER_PROPAGATES = True
-
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'redis',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 360,
+    },
+}

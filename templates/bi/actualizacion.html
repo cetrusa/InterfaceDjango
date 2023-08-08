@@ -15,7 +15,7 @@ Actuliazación
     <div class="card-body">
 
       <p>
-      <form action="{% url 'bi_app:actualizacion_bi' %}" method="post" id="myForm">
+      <form action="{% url form_url %}" method="post" id="myForm">
         {% csrf_token %}
         <span class="card text-center"><button id="submitBtn" type="submit" class="btn btn-primary">Actualizar</button></span>
       </form>

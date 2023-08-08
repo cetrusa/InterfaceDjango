@@ -3,32 +3,38 @@
   <ul class="navbar-nav flex-column">
     {% if perms.permisos.informe_bi %}
     <li class="nav-item">
-      <a class="nav-link text-white" href="{% url 'bi_app:reporte_embed' %}"><i class="fas fa-tv"></i><span> Bi Sidis</span></a>
+      <a class="nav-link text-white" href="{% url 'bi_app:reporte_embed' %}"><i class="fas fa-tv"></i><span> Bi
+          Sidis</span></a>
     </li>
     {% endif %}
     {% if perms.permisos.cubo %}
     <li class="nav-item">
-      <a class="nav-link text-white" href="{% url 'home_app:cubo'%}"><i class="fas fa-cube"></i><span> Cubo de Ventas</span></a>
+      <a class="nav-link text-white" href="{% url 'home_app:cubo_celery'%}"><i class="fas fa-cube"></i><span> Cubo de
+          Ventas</span></a>
     </li>
     {% endif %}
     {% if perms.permisos.interface %}
     <li class="nav-item">
-      <a class="nav-link text-white" href="{% url 'home_app:interface'%}"><i class="fas fa-desktop"></i><span> Int. Contables</span></a>
+      <a class="nav-link text-white" href="{% url 'home_app:interface'%}"><i class="fas fa-desktop"></i><span> Int.
+          Contables</span></a>
     </li>
     {% endif %}
     {% if perms.permisos.plano %}
     <li class="nav-item">
-      <a class="nav-link text-white" href="{% url 'home_app:plano'%}"><i class="fas fa-table"></i><span> Archivos Planos</span></a>
+      <a class="nav-link text-white" href="{% url 'home_app:plano'%}"><i class="fas fa-table"></i><span> Archivos
+          Planos</span></a>
     </li>
     {% endif %}
     {% if perms.permisos.actualizar_base %}
     <li class="nav-item">
-      <a class="nav-link text-white" href="{% url 'home_app:actualizacion'%}"><i class="fas fa-th"></i><span> Actualización Datos</span></a>
+      <a class="nav-link text-white" href="{% url 'home_app:actualizacion'%}"><i class="fas fa-th"></i><span>
+          Actualización Datos</span></a>
     </li>
     {% endif %}
     {% if perms.permisos.admin %}
     <li class="nav-item">
-      <a class="nav-link text-white" href="{% url 'admin:index' %}"><i class="fas fa-sliders-h"></i><span> Configuración</span></a>
+      <a class="nav-link text-white" href="{% url 'admin:index' %}"><i class="fas fa-sliders-h"></i><span>
+          Configuración</span></a>
     </li>
     {% endif %}
   </ul>

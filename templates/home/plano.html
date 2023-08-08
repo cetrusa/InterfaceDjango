@@ -15,7 +15,7 @@ Archivos Planos
       <h2>Archivos Planos</h2>
     </div>
     <div class="card-body">
-      <form action="{% url 'home_app:plano' %}" method="post" id="myForm">
+      <form action="{% url form_url %}" method="post" id="myForm">
         {% csrf_token %}
           <label for="date_input">Fecha:</label>
           <div id="reportrange"
@@ -75,7 +75,7 @@ Archivos Planos
   // Realiza la solicitud AJAX al servidor
   var xhr = new XMLHttpRequest();
   xhr.responseType = "text";
-  xhr.open("POST", "{% url 'home_app:plano' %}", true);
+  xhr.open("POST", "{% url form_url %}", true);
   xhr.setRequestHeader("X-CSRFToken", csrf_token);
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.onreadystatechange = function () {

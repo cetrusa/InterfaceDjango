@@ -11,10 +11,15 @@ urlpatterns = [
         views.HomePage.as_view(),
         name='panel',
     ),
+    # path(
+    #     'cubo/', 
+    #     views.CuboPage.as_view(), 
+    #     name='cubo',
+    # ),
     path(
-        'cubo/', 
-        views.CuboPage.as_view(), 
-        name='cubo',
+        'cubo_celery/', 
+        views.CuboPage_celery.as_view(), 
+        name='cubo_celery',
     ),
     path(
         'interface/', 

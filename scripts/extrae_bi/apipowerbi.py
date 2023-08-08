@@ -17,6 +17,11 @@ import json
 import msal
 from django.core.exceptions import ImproperlyConfigured
 import requests
+import time
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.utils import COMMASPACE
 
 with open("secret.json") as f:
     secret = json.loads(f.read())
@@ -56,7 +61,7 @@ class Api_PowerBi:
         access_id = token_response.get('access_token')
         return access_id
     
-    def run_datasetrefresh(self):
+    def run_datasetrefresh_solo_inicio(self):
         access_id = self.request_access_token_refresh()
 
         dataset_id = StaticPage.dataset_id_powerbi
@@ -68,6 +73,24 @@ class Api_PowerBi:
         response = requests.post(endpoint, headers=headers)
         if response.status_code == 202:
             print('Dataset refreshed')
+        else:
+            print(response.reason)
+            print(response.json())
+
+    def run_datasetrefresh(self):
+        access_id = self.request_access_token_refresh()
+
+        dataset_id = StaticPage.dataset_id_powerbi
+        endpoint = f"https://api.powerbi.com/v1.0/myorg/datasets/{dataset_id}/refreshes"
+        headers = {"Authorization": f"Bearer " + access_id}
+
+        response = requests.post(endpoint, headers=headers)
+        print(response)
+        if response.status_code == 202:
+            print("Dataset refreshed")
+            self.get_status_history()
+        elif response.status_code == 400:
+            self.get_status_history()
         else:
             print(response.reason)
             print(response.json())
@@ -96,3 +119,74 @@ class Api_PowerBi:
             return response.json()["token"]
         else:
             raise Exception("No se pudo generar el token de incrustación.")
+        
+    def get_status_history(self):
+        access_id = self.request_access_token_refresh()
+
+        dataset_id = StaticPage.dataset_id_powerbi
+        endpoint = (
+            f"https://api.powerbi.com/v1.0/myorg/datasets/{dataset_id}/refreshes?$top=1"
+        )
+        headers = {"Authorization": f"Bearer " + access_id}
+
+        max_attempts = 15  # Número máximo de intentos
+        refresh_interval = 240  # Intervalo de espera en segundos
+        attempt = 1
+
+        while attempt <= max_attempts:
+            response = requests.get(endpoint, headers=headers)
+            if response.status_code == 200 or response.status_code == 400:
+                try:
+                    refresh_status = response.json().get("value")[0].get("status")
+                    if refresh_status in ["Completed", "Failed"]:
+                        break
+                    elif refresh_status == "Unknown":
+                        print(
+                            "The refresh is in progress. Attempt",
+                            attempt,
+                            "of",
+                            max_attempts,
+                        )
+                except (json.decoder.JSONDecodeError, IndexError):
+                    print("Failed to retrieve the refresh status.")
+            else:
+                print(response.reason)
+                print(response.json())
+
+            time.sleep(refresh_interval)
+            attempt += 1
+
+        if refresh_status == "Completed":
+            print("The refresh completed successfully.")
+        elif refresh_status == "Failed":
+            error_message = response.json().get("value")[0].get("error")
+            self.send_email(error_message)
+            print("The refresh failed. Error message:", error_message)
+        else:
+            print(
+                "The refresh did not complete within the specified number of attempts."
+            )
+
+    def send_email(self, error_message):
+        host = "smtp.gmail.com"
+        port = 587
+        username = "torredecontrolamovil@gmail.com"
+        password = "skmgumqcypkhykic"
+
+        from_addr = "torredecontrolamovil@gmail.com"
+        to_addr = ["cesar.trujillo@amovil.co", "soporte@amovil.co"]
+
+        msg = MIMEMultipart()
+        msg["From"] = from_addr
+        msg["To"] = COMMASPACE.join(to_addr)
+        msg["Subject"] = f"Error Bi {StaticPage.nmEmpresa}"
+
+        body = f"Error en el Bi de {StaticPage.nmEmpresa}, {error_message}"
+
+        msg.attach(MIMEText(body, "plain"))
+
+        with smtplib.SMTP(host, port) as server:
+            server.starttls()
+            server.login(username, password)
+            server.sendmail(from_addr, to_addr, msg.as_string())
+            server.quit()

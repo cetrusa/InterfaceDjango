@@ -26,6 +26,11 @@ from celery.result import AsyncResult
 from django.http import JsonResponse
 from django.views import View
 
+# importaciones para rq
+from django_rq import get_queue
+from rq.job import Job
+from rq.job import NoSuchJobError
+from django_rq import get_connection
 
 from django.views.generic import TemplateView
 from applications.users.views import BaseView
@@ -61,6 +66,8 @@ class DownloadFileView(View):
     def get(self, request):
         file_path = request.session.get("file_path")
         file_name = request.session.get("file_name")
+        
+        f = None  # Define f fuera del bloque try para que esté disponible en el bloque except
 
         if file_path and file_name:
             try:
@@ -69,13 +76,13 @@ class DownloadFileView(View):
                 response["Content-Disposition"] = f'attachment; filename="{file_name}"'
                 return response
             except IOError:
-                f.close()  # Importante: asegúrate de cerrar el archivo si ocurre una excepción.
+                # Si f ha sido asignado y está abierto, ciérralo.
+                if f:
+                    f.close()
                 messages.error(request, "Error al abrir el archivo")
         else:
             messages.error(request, "Archivo no encontrado")
         return redirect(self.template_name)
-
-
 
 
 class DeleteFileView(View):
@@ -99,27 +106,61 @@ class DeleteFileView(View):
         except Exception as e:
             return JsonResponse({"success": False, "error_message": f"Error: no se pudo ejecutar el script. Razón: {str(e)}"})
 
+
+# esta función la use para redis.****************************************************************
+# class CheckTaskStatusView(View):
+#     def post(self, request, *args, **kwargs):
+#         cubo_ventas_task_id = request.POST.get("cubo_ventas_task_id")
+#         if not cubo_ventas_task_id:
+#             return JsonResponse({"error": "No task ID provided"}, status=400)
+#         task_result = AsyncResult(cubo_ventas_task_id)
+#         if task_result.state == "PENDING":
+#             response_data = {"status": task_result.status}
+#         else:
+#             if "file_path" in task_result.result and "file_name" in task_result.result:
+#                 request.session["file_path"] = task_result.result["file_path"]
+#                 request.session["file_name"] = task_result.result["file_name"]
+#             response_data = {
+#                 "status": task_result.status,
+#                 "result": task_result.result,
+#             }
+#         if task_result.status == "FAILURE":
+#             return JsonResponse({"error": "Task execution failed"}, status=500)
+#         return JsonResponse(response_data)
+# .*******************************************************************************************
+
+
 class CheckTaskStatusView(View):
     def post(self, request, *args, **kwargs):
         cubo_ventas_task_id = request.POST.get("cubo_ventas_task_id")
         if not cubo_ventas_task_id:
             return JsonResponse({"error": "No task ID provided"}, status=400)
-        task_result = AsyncResult(cubo_ventas_task_id)
-        if task_result.state == "PENDING":
-            response_data = {"status": task_result.status}
-        else:
-            if "file_path" in task_result.result and "file_name" in task_result.result:
-                request.session["file_path"] = task_result.result["file_path"]
-                request.session["file_name"] = task_result.result["file_name"]
-            response_data = {
-                "status": task_result.status,
-                "result": task_result.result,
-            }
-        if task_result.status == "FAILURE":
-            return JsonResponse({"error": "Task execution failed"}, status=500)
+        
+        # Get RQ connection
+        connection = get_connection()
+
+        try:
+            # Fetch the job
+            job = Job.fetch(cubo_ventas_task_id, connection=connection)
+
+            if job.is_finished:
+                if "file_path" in job.result and "file_name" in job.result:
+                    request.session["file_path"] = job.result["file_path"]
+                    request.session["file_name"] = job.result["file_name"]
+                response_data = {
+                    "status": job.get_status(),
+                    "result": job.result,
+                }
+            elif job.is_failed:
+                return JsonResponse({"error": "Task execution failed"}, status=500)
+            else:
+                response_data = {"status": job.get_status()}
+        except NoSuchJobError:
+            response_data = {"status": "notfound", "error": "Task not found"}
+
         return JsonResponse(response_data)
-    
-class CuboPage(LoginRequiredMixin, BaseView):
+
+class CuboPage_celery(LoginRequiredMixin, BaseView):
     template_name = "home/cubo.html"
     StaticPage.template_name = template_name
     login_url = reverse_lazy("users_app:user-login")
@@ -136,6 +177,9 @@ class CuboPage(LoginRequiredMixin, BaseView):
 
         if not database_name:
             return redirect("home_app:panel")
+        
+        if not database_name or not IdtReporteIni or not IdtReporteFin:
+            return JsonResponse({"success": False, "error_message": "Se debe seleccionar la base de datos y las fechas."})
 
         request.session["database_name"] = database_name
         StaticPage.name = database_name
@@ -157,8 +201,54 @@ class CuboPage(LoginRequiredMixin, BaseView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form_url"] = "home_app:cubo"
+        context["form_url"] = "home_app:cubo_celery"
         return context
+    
+# esta clase se usa con celery  
+# class CuboPage(LoginRequiredMixin, BaseView):
+#     template_name = "home/cubo.html"
+#     StaticPage.template_name = template_name
+#     login_url = reverse_lazy("users_app:user-login")
+
+#     @method_decorator(registrar_auditoria)
+#     @method_decorator(permission_required("permisos.cubo", raise_exception=True))
+#     def dispatch(self, request, *args, **kwargs):
+#         return super().dispatch(request, *args, **kwargs)
+
+#     def post(self, request, *args, **kwargs):
+#         database_name = request.POST.get("database_select")
+#         IdtReporteIni = request.POST.get("IdtReporteIni")
+#         IdtReporteFin = request.POST.get("IdtReporteFin")
+
+#         if not database_name:
+#             return redirect("home_app:panel")
+        
+#         if not database_name or not IdtReporteIni or not IdtReporteFin:
+#             return JsonResponse({"success": False, "error_message": "Se debe seleccionar la base de datos y las fechas."})
+
+#         request.session["database_name"] = database_name
+#         StaticPage.name = database_name
+#         try:
+#             task = cubo_ventas_task2.delay(database_name, IdtReporteIni, IdtReporteFin)
+#             # Guardamos el ID de la tarea en la sesión del usuario
+#             request.session["cubo_ventas_task_id"] = task.id
+#             return JsonResponse(
+#                 {
+#                     "success": True,
+#                     "cubo_ventas_task_id": task.id,
+#                 }
+#             )  # Devuelve el ID de la tarea al frontend
+#         except Exception as e:
+#             return JsonResponse({"success": False, "error_message": f"Error: {str(e)}"})
+
+#     def get(self, request, *args, **kwargs):
+#         return super().get(request, *args, **kwargs)
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["form_url"] = "home_app:cubo"
+#         return context
+    
 class InterfacePage(LoginRequiredMixin, BaseView):
     template_name = "home/interface.html"
     StaticPage.template_name = template_name
