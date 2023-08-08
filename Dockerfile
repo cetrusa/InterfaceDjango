@@ -38,5 +38,5 @@ RUN chown -R root:root /code/media
 RUN python manage.py collectstatic --no-input
 
 # Cambiar al usuario no root
-USER celeryuser
+USER adminuser
 
