@@ -22,9 +22,11 @@ from scripts.extrae_bi.cubo import Cubo_Ventas
 from scripts.extrae_bi.interface import Interface_Contable
 from django.contrib.auth.mixins import UserPassesTestMixin
 from .tasks import cubo_ventas_task
-# from celery.result import AsyncResult
 from django.http import JsonResponse
 from django.views import View
+
+# importaciones para celery
+# from celery.result import AsyncResult
 
 # importaciones para rq
 from django_rq import get_queue

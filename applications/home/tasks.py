@@ -1,9 +1,10 @@
-# from celery import shared_task
 from scripts.extrae_bi.cubo import Cubo_Ventas
 from scripts.StaticPage import StaticPage
 import logging
 
+# from celery import shared_task
 # @shared_task
+
 from django_rq import job
 
 @job
