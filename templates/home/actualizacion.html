@@ -82,6 +82,14 @@ Actualización
   // Evento click para Base de Datos
   document.getElementById("submitBtn").addEventListener("click", function (event) {
     event.preventDefault();
+    // Check if a task is already in progress
+    if (this.getAttribute("data-submitted") === "true") {
+      alert("Ya hay una tarea en curso.");
+      return;
+    }
+
+    this.setAttribute("data-submitted", "true");
+    document.getElementById("processingModal").style.display = "flex";
     showMessage("database");
     submitForm("{% url 'home_app:actualizacion' %}", "myForm");
   });
@@ -89,6 +97,14 @@ Actualización
    // Evento click para PowerBi
    document.getElementById("submitBtnPowerBi").addEventListener("click", function (event) {
     event.preventDefault();
+    // Check if a task is already in progress
+    if (this.getAttribute("data-submitted") === "true") {
+      alert("Ya hay una tarea en curso.");
+      return;
+    }
+
+    this.setAttribute("data-submitted", "true");
+    document.getElementById("processingModal").style.display = "flex";
     showMessage("powerbi");
     submitForm("{% url 'bi_app:actualizacion_bi' %}", "myFormPowerBi");
   });
@@ -113,7 +129,7 @@ Actualización
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function () {
       if (this.readyState === XMLHttpRequest.DONE) {
-        document.getElementById("processingModal").style.display = "none";
+        // document.getElementById("processingModal").style.display = "none";
         console.log(this.status, this.responseText);
         var response = JSON.parse(this.responseText);
         handleServerResponse(this.status, response);
@@ -125,24 +141,67 @@ Actualización
     xhr.send(new URLSearchParams(formData).toString());
   }
 
+  // Manejar la respuesta del servidor
   function handleServerResponse(status, response) {
     if (status === 200) {
-      try {
-        if (typeof response === "object" && "success" in response && "error_message" in response) {
-          if (response.success) {
-            alert("Actualización terminada");
-          } else {
-            alert("Hubo un error en la actualización: " + response.error_message);
-          }
+      if (typeof response === "object" && "success" in response) {
+        if (response.success) {
+          // Almacena interface_task_id en sessionStorage
+          window.sessionStorage.setItem("task_id", response.task_id);
+          // Comprueba el estado de la tarea
+          checkTaskStatus();
         } else {
-          throw new Error("La respuesta del servidor no es un objeto JSON válido");
+          alert("Hubo un error en el proceso: " + response.error_message);
         }
-      } catch (e) {
-        alert("Hubo un error en la actualización, por favor inténtelo de nuevo.");
-        console.error(e);
+      } else {
+        alert("La respuesta del servidor no es un objeto JSON válido");
       }
     } else {
-      alert("Hubo un error en el proceso, por favor inténtelo de nuevo.");
+      alert("Hubo un error al enviar la solicitud, código de estado: " + status);
+    }
+  }
+
+  // función para revisar estatus de la tarea
+  function checkTaskStatus() {
+    var task_id = window.sessionStorage.getItem("task_id");
+
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = "text";
+    xhr.open("POST", "{% url 'home_app:check_task_status' %}", true);
+    xhr.setRequestHeader("X-CSRFToken", csrf_token);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+      if (this.readyState === XMLHttpRequest.DONE) {
+        var response = JSON.parse(this.responseText);
+        handleTaskStatus(this.status, response);
+      }
+    };
+    xhr.send("task_id=" + encodeURIComponent(task_id));
+  }
+
+  // Revisar el estado de la tarea
+  function handleTaskStatus(status, response) {
+    if (status === 200) {
+      if (typeof response === "object" && "status" in response) {
+        if (response.status === "finished") {
+          // La tarea se ha completado, podemos mostrar el resultado al usuario
+          document.getElementById("processingModal").style.display = "none";
+          alert("Proceso terminado");
+        } else if (response.status === "failed") {
+          // La tarea falló
+          document.getElementById("processingModal").style.display = "none";
+          alert("Hubo un error en el proceso: " + response.result);
+        } else if (response.status === "queued" || response.status === "deferred" || response.status === "started") {
+          // La tarea aún se está ejecutando, verifica el estado de nuevo después de un tiempo
+          setTimeout(checkTaskStatus, 20000);
+        } else {
+          alert("Estado desconocido de la tarea: " + response.status);
+        }
+      } else {
+        alert("La respuesta del servidor no es un objeto JSON válido");
+      }
+    } else {
+      alert("Hubo un error al comprobar el estado de la tarea, código de estado: " + status);
     }
   }
 </script>

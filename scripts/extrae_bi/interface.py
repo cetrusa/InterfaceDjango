@@ -29,8 +29,8 @@ class Interface_Contable:
     def __init__(self,database_name,IdtReporteIni, IdtReporteFin):
         
         ConfigBasic(database_name)
-        StaticPage.IdtReporteIni=IdtReporteIni
-        StaticPage.IdtReporteFin=IdtReporteFin
+        self.IdtReporteIni=IdtReporteIni
+        self.IdtReporteFin=IdtReporteFin
 
     def Procedimiento_a_Excel(self):
         a = StaticPage.dbBi
@@ -39,15 +39,15 @@ class Interface_Contable:
         consig = 0
         nd = 0
         sql = StaticPage.nmProcedureInterface
-        StaticPage.archivo_plano = f"Interface_Contable_{StaticPage.name}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.xlsx"
+        StaticPage.archivo_plano = f"Interface_Contable_{StaticPage.name}_de_{self.IdtReporteIni}_a_{self.IdtReporteFin}.xlsx"
         StaticPage.file_path = os.path.join('media', StaticPage.archivo_plano)
         if StaticPage.txProcedureInterface:    
             with pd.ExcelWriter( StaticPage.file_path, engine='openpyxl') as writer:
                 for hoja in StaticPage.txProcedureInterface:
                     if a == 'powerbi_tym_eje':
-                        sqlout = text(f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{hoja}','{compra}','{consig}','{nd}');")     
+                        sqlout = text(f"CALL {sql}('{self.IdtReporteIni}','{self.IdtReporteFin}','{IdDs}','{hoja}','{compra}','{consig}','{nd}');")     
                     else:
-                        sqlout = text(f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{hoja}');")
+                        sqlout = text(f"CALL {sql}('{self.IdtReporteIni}','{self.IdtReporteFin}','{IdDs}','{hoja}');")
                     try:
                         with StaticPage.conin2.connect() as connectionout:
                             cursor = connectionout.execution_options(isolation_level="READ COMMITTED")
@@ -62,7 +62,7 @@ class Interface_Contable:
     def Procedimiento_a_Plano(self):
         a = StaticPage.dbBi
         IdDs = ''
-        StaticPage.archivo_plano = f"Plano_{StaticPage.name}_de_{StaticPage.IdtReporteIni}_a_{StaticPage.IdtReporteFin}.zip"
+        StaticPage.archivo_plano = f"Plano_{StaticPage.name}_de_{self.IdtReporteIni}_a_{self.IdtReporteFin}.zip"
         StaticPage.file_path = os.path.join('media', StaticPage.archivo_plano)
         if StaticPage.txProcedureCsv:
             print('aqui')
@@ -70,7 +70,7 @@ class Interface_Contable:
             with zipfile.ZipFile(StaticPage.file_path, "w") as zf:
                 for a in StaticPage.txProcedureCsv:
                     with zf.open(a+'.txt', "w") as buffer:
-                        sqlout = text(f"CALL {sql}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{a}');")
+                        sqlout = text(f"CALL {sql}('{self.IdtReporteIni}','{self.IdtReporteFin}','{IdDs}','{a}');")
                         with StaticPage.conin2.connect() as connectionout:
                             cursor = connectionout.execution_options(isolation_level="READ COMMITTED")
                             resultado = pd.read_sql_query(sql=sqlout, con=cursor)
@@ -81,7 +81,7 @@ class Interface_Contable:
                 print(StaticPage.txProcedureCsv2)
                 for a in StaticPage.txProcedureCsv2:
                     with zf.open(a+'.txt', "w") as buffer:
-                        sqlout = text(f"CALL {sql2}('{StaticPage.IdtReporteIni}','{StaticPage.IdtReporteFin}','{IdDs}','{a}');")
+                        sqlout = text(f"CALL {sql2}('{self.IdtReporteIni}','{self.IdtReporteFin}','{IdDs}','{a}');")
                         with StaticPage.conin2.connect() as connectionout:
                             cursor = connectionout.execution_options(isolation_level="READ COMMITTED")
                             resultado = pd.read_sql_query(sql=sqlout, con=cursor)

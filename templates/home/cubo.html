@@ -53,7 +53,7 @@ Cubo de Ventas
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Procesando...</h5>
+        <h5 class="modal-title">Procesando Cubo de Ventas...</h5>
       </div>
       <div class="modal-body">
         Por favor, espere mientras se genera el archivo...
@@ -107,7 +107,7 @@ Cubo de Ventas
       if (typeof response === "object" && "success" in response) {
         if (response.success) {
           // Almacena cubo_ventas_task_id en sessionStorage
-          window.sessionStorage.setItem("cubo_ventas_task_id", response.cubo_ventas_task_id);
+          window.sessionStorage.setItem("task_id", response.task_id);
           // Comprueba el estado de la tarea
           checkTaskStatus();
         } else {
@@ -123,7 +123,7 @@ Cubo de Ventas
 
   // función para revisar estatus de la tarea
   function checkTaskStatus() {
-    var cubo_ventas_task_id = window.sessionStorage.getItem("cubo_ventas_task_id");
+    var task_id = window.sessionStorage.getItem("task_id");
 
     var xhr = new XMLHttpRequest();
     xhr.responseType = "text";
@@ -136,7 +136,7 @@ Cubo de Ventas
         handleTaskStatus(this.status, response);
       }
     };
-    xhr.send("cubo_ventas_task_id=" + encodeURIComponent(cubo_ventas_task_id));
+    xhr.send("task_id=" + encodeURIComponent(task_id));
   }
 
   // Revisar el estado de la tarea

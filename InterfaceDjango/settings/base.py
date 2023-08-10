@@ -57,14 +57,14 @@ THIRD_PARTY_APPS = (
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    # "InterfaceDjango.middleware.auto_logout.AutoLogoutMiddleware",
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # "InterfaceDjango.middleware.auto_logout.AutoLogoutMiddleware",
-    'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -73,7 +73,7 @@ ROOT_URLCONF = "InterfaceDjango.urls"
 # Tiempo de inactividad antes de cerrar la sesión automáticamente (en segundos)
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 SESSION_COOKIE_AGE = 1209600  # 2 semanas
-SESSION_EXPIRE_SECONDS = 28800  # Expire despues de 8 horas
+SESSION_EXPIRE_SECONDS = 7200  # Expire despues de 2 horas
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True # Invalide la sesión después de la actividad más reciente/última
 SESSION_TIMEOUT_REDIRECT = 'login/' # Add your URL
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True # Invalid session

@@ -21,7 +21,7 @@ from scripts.extrae_bi.extrae_bi import Extrae_Bi
 from scripts.extrae_bi.cubo import Cubo_Ventas
 from scripts.extrae_bi.interface import Interface_Contable
 from django.contrib.auth.mixins import UserPassesTestMixin
-from .tasks import cubo_ventas_task
+from .tasks import cubo_ventas_task, interface_task, plano_task, extrae_bi_task
 from django.http import JsonResponse
 from django.views import View
 
@@ -107,35 +107,10 @@ class DeleteFileView(View):
             return JsonResponse({"success": False, "error_message": "El archivo no existe."})
         except Exception as e:
             return JsonResponse({"success": False, "error_message": f"Error: no se pudo ejecutar el script. Razón: {str(e)}"})
-
-
-# esta función la use para redis.****************************************************************
-# class CheckTaskStatusView(View):
-#     def post(self, request, *args, **kwargs):
-#         cubo_ventas_task_id = request.POST.get("cubo_ventas_task_id")
-#         if not cubo_ventas_task_id:
-#             return JsonResponse({"error": "No task ID provided"}, status=400)
-#         task_result = AsyncResult(cubo_ventas_task_id)
-#         if task_result.state == "PENDING":
-#             response_data = {"status": task_result.status}
-#         else:
-#             if "file_path" in task_result.result and "file_name" in task_result.result:
-#                 request.session["file_path"] = task_result.result["file_path"]
-#                 request.session["file_name"] = task_result.result["file_name"]
-#             response_data = {
-#                 "status": task_result.status,
-#                 "result": task_result.result,
-#             }
-#         if task_result.status == "FAILURE":
-#             return JsonResponse({"error": "Task execution failed"}, status=500)
-#         return JsonResponse(response_data)
-# .*******************************************************************************************
-
-
 class CheckTaskStatusView(View):
     def post(self, request, *args, **kwargs):
-        cubo_ventas_task_id = request.POST.get("cubo_ventas_task_id")
-        if not cubo_ventas_task_id:
+        task_id = request.POST.get("task_id")
+        if not task_id:
             return JsonResponse({"error": "No task ID provided"}, status=400)
         
         # Get RQ connection
@@ -143,16 +118,17 @@ class CheckTaskStatusView(View):
 
         try:
             # Fetch the job
-            job = Job.fetch(cubo_ventas_task_id, connection=connection)
+            job = Job.fetch(task_id, connection=connection)
 
             if job.is_finished:
-                if "file_path" in job.result and "file_name" in job.result:
-                    request.session["file_path"] = job.result["file_path"]
-                    request.session["file_name"] = job.result["file_name"]
                 response_data = {
                     "status": job.get_status(),
                     "result": job.result,
                 }
+                # Check if "file_path" and "file_name" are in the result
+                if "file_path" in job.result and "file_name" in job.result:
+                    request.session["file_path"] = job.result["file_path"]
+                    request.session["file_name"] = job.result["file_name"]
             elif job.is_failed:
                 return JsonResponse({"error": "Task execution failed"}, status=500)
             else:
@@ -188,11 +164,11 @@ class CuboPage(LoginRequiredMixin, BaseView):
         try:
             task = cubo_ventas_task.delay(database_name, IdtReporteIni, IdtReporteFin)
             # Guardamos el ID de la tarea en la sesión del usuario
-            request.session["cubo_ventas_task_id"] = task.id
+            request.session["task_id"] = task.id
             return JsonResponse(
                 {
                     "success": True,
-                    "cubo_ventas_task_id": task.id,
+                    "task_id": task.id,
                 }
             )  # Devuelve el ID de la tarea al frontend
         except Exception as e:
@@ -206,51 +182,6 @@ class CuboPage(LoginRequiredMixin, BaseView):
         context["form_url"] = "home_app:cubo"
         return context
     
-# esta clase se usa con celery  
-# class CuboPage(LoginRequiredMixin, BaseView):
-#     template_name = "home/cubo.html"
-#     StaticPage.template_name = template_name
-#     login_url = reverse_lazy("users_app:user-login")
-
-#     @method_decorator(registrar_auditoria)
-#     @method_decorator(permission_required("permisos.cubo", raise_exception=True))
-#     def dispatch(self, request, *args, **kwargs):
-#         return super().dispatch(request, *args, **kwargs)
-
-#     def post(self, request, *args, **kwargs):
-#         database_name = request.POST.get("database_select")
-#         IdtReporteIni = request.POST.get("IdtReporteIni")
-#         IdtReporteFin = request.POST.get("IdtReporteFin")
-
-#         if not database_name:
-#             return redirect("home_app:panel")
-        
-#         if not database_name or not IdtReporteIni or not IdtReporteFin:
-#             return JsonResponse({"success": False, "error_message": "Se debe seleccionar la base de datos y las fechas."})
-
-#         request.session["database_name"] = database_name
-#         StaticPage.name = database_name
-#         try:
-#             task = cubo_ventas_task2.delay(database_name, IdtReporteIni, IdtReporteFin)
-#             # Guardamos el ID de la tarea en la sesión del usuario
-#             request.session["cubo_ventas_task_id"] = task.id
-#             return JsonResponse(
-#                 {
-#                     "success": True,
-#                     "cubo_ventas_task_id": task.id,
-#                 }
-#             )  # Devuelve el ID de la tarea al frontend
-#         except Exception as e:
-#             return JsonResponse({"success": False, "error_message": f"Error: {str(e)}"})
-
-#     def get(self, request, *args, **kwargs):
-#         return super().get(request, *args, **kwargs)
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["form_url"] = "home_app:cubo"
-#         return context
-    
 class InterfacePage(LoginRequiredMixin, BaseView):
     template_name = "home/interface.html"
     StaticPage.template_name = template_name
@@ -263,34 +194,31 @@ class InterfacePage(LoginRequiredMixin, BaseView):
 
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get("database_select")
-        # database_name = request.session.get('database_name') or request.POST.get('database_select')
+        IdtReporteIni = request.POST.get("IdtReporteIni")
+        IdtReporteFin = request.POST.get("IdtReporteFin")
+
         if not database_name:
             return redirect("home_app:panel")
+        
+        if not database_name or not IdtReporteIni or not IdtReporteFin:
+            return JsonResponse({"success": False, "error_message": "Se debe seleccionar la base de datos y las fechas."})
 
         request.session["database_name"] = database_name
         IdtReporteIni = request.POST.get("IdtReporteIni")
         IdtReporteFin = request.POST.get("IdtReporteFin")
         StaticPage.name = database_name
         try:
-            # Instanciamos la clase Interface_Contable con el nombre de la base de datos como argumento
-            interface_contable = Interface_Contable(
-                database_name, IdtReporteIni, IdtReporteFin
-            )
-            interface_contable.Procedimiento_a_Excel()
-            file_path = StaticPage.file_path
-            file_name = StaticPage.archivo_plano
-            request.session["file_path"] = file_path
-            request.session["file_name"] = file_name
-            return JsonResponse(
-                {"success": True, "error_message": "", "file_path": file_path}
-            )
-        except Exception as e:
+            task = interface_task.delay(database_name, IdtReporteIni, IdtReporteFin)
+            # Guardamos el ID de la tarea en la sesión del usuario
+            request.session["task_id"] = task.id
             return JsonResponse(
                 {
-                    "success": False,
-                    "error_message": f"Error: no se pudo ejecutar el script. Razón: {e}",
+                    "success": True,
+                    "task_id": task.id,
                 }
-            )
+            )  # Devuelve el ID de la tarea al frontend
+        except Exception as e:
+            return JsonResponse({"success": False, "error_message": f"Error: {str(e)}"})
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
@@ -313,35 +241,30 @@ class PlanoPage(LoginRequiredMixin, BaseView):
 
     def post(self, request, *args, **kwargs):
         database_name = request.POST.get("database_select")
-        # database_name = request.session.get('database_name') or request.POST.get('database_select')
-        if not database_name:
-            return redirect("home_app:panel")
-
-        request.session["database_name"] = database_name
         IdtReporteIni = request.POST.get("IdtReporteIni")
         IdtReporteFin = request.POST.get("IdtReporteFin")
+
+        if not database_name:
+            return redirect("home_app:panel")
+        
+        if not database_name or not IdtReporteIni or not IdtReporteFin:
+            return JsonResponse({"success": False, "error_message": "Se debe seleccionar la base de datos y las fechas."})
+
+        request.session["database_name"] = database_name
         StaticPage.name = database_name
 
         try:
-            # Instanciamos la clase Extrae_Bi con el nombre de la base de datos como argumento
-            interface_contable = Interface_Contable(
-                database_name, IdtReporteIni, IdtReporteFin
-            )
-            interface_contable.Procedimiento_a_Plano()
-            file_path = StaticPage.file_path
-            file_name = StaticPage.archivo_plano
-            request.session["file_path"] = file_path
-            request.session["file_name"] = file_name
-            return JsonResponse(
-                {"success": True, "error_message": "", "file_path": file_path}
-            )
-        except Exception as e:
+            task = plano_task.delay(database_name, IdtReporteIni, IdtReporteFin)
+            # Guardamos el ID de la tarea en la sesión del usuario
+            request.session["task_id"] = task.id
             return JsonResponse(
                 {
-                    "success": False,
-                    "error_message": f"Error: no se pudo ejecutar el script. Razón: {e}",
+                    "success": True,
+                    "task_id": task.id,
                 }
-            )
+            )  # Devuelve el ID de la tarea al frontend
+        except Exception as e:
+            return JsonResponse({"success": False, "error_message": f"Error: {str(e)}"})
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
@@ -373,20 +296,17 @@ class ActualizacionPage(LoginRequiredMixin, BaseView):
         request.session["database_name"] = database_name
         StaticPage.name = database_name
         try:
-            # Instanciamos la clase Extrae_Bi con el nombre de la base de datos como argumento
-            extrae_bi = Extrae_Bi(database_name)
-            # Ejecutamos el script aquí
-            extrae_bi.extractor()
-            # extraebi = os.path.join('scripts','extrae_bi', 'extrae_bi.py')
-            # subprocess.run(["python", extraebi])
-            return JsonResponse({"success": True, "error_message": ""})
-        except Exception as e:
+            task = extrae_bi_task.delay(database_name)
+            # Guardamos el ID de la tarea en la sesión del usuario
+            request.session["task_id"] = task.id
             return JsonResponse(
                 {
-                    "success": False,
-                    "error_message": f"Error: no se pudo ejecutar el script. Razón: {e}",
+                    "success": True,
+                    "task_id": task.id,
                 }
-            )
+            )  # Devuelve el ID de la tarea al frontend
+        except Exception as e:
+            return JsonResponse({"success": False, "error_message": f"Error: {str(e)}"})
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)

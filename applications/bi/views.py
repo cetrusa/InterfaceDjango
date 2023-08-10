@@ -24,6 +24,7 @@ from applications.users.decorators import registrar_auditoria
 from scripts.embedded.powerbi import PbiEmbedService
 from django.core.exceptions import ImproperlyConfigured
 import json
+from .tasks import actualiza_bi_task
 
 
 with open("secret.json") as f:
@@ -64,13 +65,17 @@ class ActualizacionBiPage(LoginRequiredMixin, BaseView):
         request.session['database_name'] = database_name
         StaticPage.name = database_name
         try:
-            # Instanciamos la clase Extrae_Bi con el nombre de la base de datos como argumento
-            ApiPBi = Api_PowerBi(database_name)
-            # Ejecutamos el script aquí
-            ApiPBi.run_datasetrefresh()
-            return JsonResponse({'success': True, 'error_message': ''})
+            task = actualiza_bi_task.delay(database_name)
+            # Guardamos el ID de la tarea en la sesión del usuario
+            request.session["task_id"] = task.id
+            return JsonResponse(
+                {
+                    "success": True,
+                    "task_id": task.id,
+                }
+            )  # Devuelve el ID de la tarea al frontend
         except Exception as e:
-            return JsonResponse({'success': False, 'error_message': f"Error: no se pudo ejecutar el script. Razón: {e}"})
+            return JsonResponse({"success": False, "error_message": f"Error: {str(e)}"})
         
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
