@@ -54,16 +54,18 @@ class Cubo_Ventas:
         wb = Workbook(write_only=True)
         ws = wb.create_sheet(title=hoja)
         first_chunk = True
+        row_offset = 0
         for chunk in pd.read_sql_query(
             f"SELECT * FROM {table_name}", self.engine, chunksize=chunksize
         ):
             if first_chunk:
                 ws.append(chunk.columns.tolist())
                 first_chunk = False
-            for index, row in chunk.iterrows():
-                cells = [WriteOnlyCell(ws, value=value) for value in row]
-                ws.append(cells)
-        wb.save(StaticPage.file_path)
+            for row in chunk.itertuples(index=False, name=None):  # Use itertuples for better performance
+                ws.append(row)
+            row_offset += chunksize  # This is not necessary for write_only mode but included for clarity
+        wb.save(StaticPage.file_path)  # Save after all chunks are written
+
 
     def generate_sqlout(self, hoja):
         a = StaticPage.dbBi
