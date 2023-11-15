@@ -34,11 +34,13 @@ class Cubo_Ventas:
         return table_name
 
     def write_to_excel(self, table_name, hoja, writer, chunksize=50000):
+        startrow = 0
         for chunk in pd.read_sql_query(
             f"SELECT * FROM {table_name}", self.engine, chunksize=chunksize
         ):
-            chunk.to_excel(writer, index=False, sheet_name=hoja, header=True)
-            writer.sheets[hoja].sheet_state = "visible"
+            chunk.to_excel(writer, startrow=startrow, index=False, sheet_name=hoja, header=not bool(startrow))
+            startrow += len(chunk)
+        writer.sheets[hoja].sheet_state = "visible"
 
     def write_to_csv(self, table_name, chunksize=50000):
         StaticPage.archivo_cubo_ventas = f"Cubo_de_Ventas_{StaticPage.name}_de_{self.IdtReporteIni}_a_{self.IdtReporteFin}.csv"
