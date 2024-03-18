@@ -85,7 +85,7 @@ class Interface_Contable:
                         with StaticPage.conin2.connect() as connectionout:
                             cursor = connectionout.execution_options(isolation_level="READ COMMITTED")
                             resultado = pd.read_sql_query(sql=sqlout, con=cursor)
-                            resultado.to_csv(buffer,sep=',',index=False,header=False,float_format='%.2f')
+                            resultado.to_csv(buffer,sep=',',index=False,header=False,float_format='%.0f')
                             # time.sleep(1)
         else:
             return JsonResponse({'success': True, 'error_message': f'La empresa {StaticPage.nmEmpresa} no maneja archivo plano'})
